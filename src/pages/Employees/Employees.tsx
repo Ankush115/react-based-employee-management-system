@@ -48,7 +48,9 @@ const Employees = () => {
           </h3>
 
           <p>{employee.email}</p>
+
           <p>{employee.company.department}</p>
+
           <p>{employee.company.title}</p>
         </div>
       ))}
