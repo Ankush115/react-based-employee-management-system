@@ -17,7 +17,7 @@ const EmployeeTable = ({
 }: EmployeeTableProps) => {
   return (
     <div>
-      <table>
+      <table border={1}>
         <thead>
           <tr>
             <th onClick={() => onSort("name")}>
