@@ -1,7 +1,4 @@
-import {
-  createAsyncThunk,
-  createSlice,
-} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface AuthUser {
   id: number;
@@ -21,24 +18,33 @@ interface LoginCredentials {
   password: string;
 }
 
-const initialState: AuthState = {
-  user: null,
-  loading: false,
-  error: null,
-  isAuthenticated: false,
+const getInitialAuthState = (): AuthState => {
+  try {
+    const storedAuth = localStorage.getItem("auth");
+
+    if (storedAuth) {
+      return JSON.parse(storedAuth);
+    }
+  } catch (error) {
+    console.error("Failed to restore authentication", error);
+  }
+
+  return {
+    user: null,
+    loading: false,
+    error: null,
+    isAuthenticated: false,
+  };
 };
+
+const initialState = getInitialAuthState();
 
 export const login = createAsyncThunk(
   "auth/login",
-  async (
-    credentials: LoginCredentials,
-    { rejectWithValue }
-  ) => {
-    const validEmail =
-      "admin@test.com";
+  async (credentials: LoginCredentials, { rejectWithValue }) => {
+    const validEmail = "admin@test.com";
 
-    const validPassword =
-      "Admin@123";
+    const validPassword = "Admin@123";
 
     if (
       credentials.email === validEmail &&
@@ -51,10 +57,8 @@ export const login = createAsyncThunk(
       };
     }
 
-    return rejectWithValue(
-      "Invalid email or password"
-    );
-  }
+    return rejectWithValue("Invalid email or password");
+  },
 );
 
 const authSlice = createSlice({
@@ -66,45 +70,49 @@ const authSlice = createSlice({
       state.user = null;
       state.isAuthenticated = false;
       state.error = null;
+
+      localStorage.removeItem("auth");
     },
   },
 
   extraReducers: (builder) => {
     builder
 
-      .addCase(
-        login.pending,
-        (state) => {
-          state.loading = true;
-          state.error = null;
-        }
-      )
+      .addCase(login.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
 
-      .addCase(
-        login.fulfilled,
-        (state, action) => {
-          state.loading = false;
-          state.user = action.payload;
-          state.isAuthenticated = true;
-          state.error = null;
-        }
-      )
+      .addCase(login.fulfilled, (state, action) => {
+        state.loading = false;
 
-      .addCase(
-        login.rejected,
-        (state, action) => {
-          state.loading = false;
-          state.isAuthenticated = false;
+        state.user = action.payload;
 
-          state.error =
-            (action.payload as string) ||
-            "Login failed";
-        }
-      );
+        state.isAuthenticated = true;
+
+        state.error = null;
+
+        localStorage.setItem(
+          "auth",
+          JSON.stringify({
+            user: action.payload,
+            loading: false,
+            error: null,
+            isAuthenticated: true,
+          }),
+        );
+      })
+
+      .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+
+        state.isAuthenticated = false;
+
+        state.error = (action.payload as string) || "Login failed";
+      });
   },
 });
 
-export const { logout } =
-  authSlice.actions;
+export const { logout } = authSlice.actions;
 
 export default authSlice.reducer;

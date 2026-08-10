@@ -10,6 +10,7 @@ import EmptyState from "../../components/common/EmptyState";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchEmployees } from "../../store/slices/employeeSlice";
 import { useNavigate } from "react-router-dom";
+import { logout } from "../../store/slices/authSlice";
 
 type SortField = "name" | "email" | "department" | "role";
 
@@ -19,6 +20,11 @@ const ITEMS_PER_PAGE = 10;
 
 const Employees = () => {
   const navigate = useNavigate();
+  const handleLogout = () => {
+    dispatch(logout());
+
+    navigate("/login");
+  };
   const dispatch = useAppDispatch();
 
   const { employees, loading, error } = useAppSelector(
@@ -36,10 +42,10 @@ const Employees = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-  if (employees.length === 0) {
-    dispatch(fetchEmployees());
-  }
-}, [dispatch, employees.length]);
+    if (employees.length === 0) {
+      dispatch(fetchEmployees());
+    }
+  }, [dispatch, employees.length]);
 
   // Get unique departments
   const departments = Array.from(
@@ -146,26 +152,29 @@ const Employees = () => {
   };
 
   if (loading) {
-  return <LoadingState />;
-}
+    return <LoadingState />;
+  }
 
   if (error) {
-  return (
-    <ErrorState
-      message={error}
-      onRetry={() => {
-        dispatch(fetchEmployees());
-      }}
-    />
-  );
-}
+    return (
+      <ErrorState
+        message={error}
+        onRetry={() => {
+          dispatch(fetchEmployees());
+        }}
+      />
+    );
+  }
 
   return (
     <div>
       <h1>Employees</h1>
-      <button type="button" onClick={() => navigate("/employees/add")}>
+     <div> <button type="button" onClick={() => navigate("/employees/add")}>
         Add Employee
       </button>
+      <button type="button" onClick={handleLogout}>
+        Logout
+      </button></div>
       <p>
         Showing {showingFrom} - {showingTo} of {sortedEmployees.length}{" "}
         employees

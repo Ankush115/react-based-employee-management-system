@@ -4,13 +4,14 @@ import Employees from "../pages/Employees/Employees";
 import EmployeeDetails from "../components/employees/EmployeeDetails";
 import AddEmployee from "../components/employees/AddEmployee";
 import Login from "../pages/Auth/Login";
+import ProtectedRoute from "./ProtectedRoute";
 
 const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/employees" element={<Employees />} />
+        <Route path="/employees" element={<ProtectedRoute><Employees /></ProtectedRoute>} />
         <Route path="/employees/:id" element={<EmployeeDetails />} />
         <Route path="/employees/add" element={<AddEmployee />} />
       </Routes>
