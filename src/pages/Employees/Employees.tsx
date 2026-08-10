@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getEmployees } from "../../services/employeeService";
+// import { getEmployees } from "../../services/employeeService";
 import type { Employee } from "../../types/employee";
 import EmployeeTable from "../../components/employees/EmployeeTable";
 import EmployeeToolbar from "../../components/employees/EmployeeToolbar";
@@ -7,6 +7,8 @@ import EmployeePagination from "../../components/employees/EmployeePagination";
 import LoadingState from "../../components/common/LoadingState";
 import ErrorState from "../../components/common/ErrorState";
 import EmptyState from "../../components/common/EmptyState";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { fetchEmployees } from "../../store/slices/employeeSlice";
 
 type SortField = "name" | "email" | "department" | "role";
 
@@ -15,88 +17,54 @@ type SortDirection = "asc" | "desc";
 const ITEMS_PER_PAGE = 10;
 
 const Employees = () => {
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const dispatch = useAppDispatch();
+
+  const { employees, loading, error } = useAppSelector(
+    (state) => state.employees,
+  );
 
   const [search, setSearch] = useState("");
   const [department, setDepartment] = useState("");
   const [role, setRole] = useState("");
 
-  const [sortField, setSortField] =
-    useState<SortField>("name");
+  const [sortField, setSortField] = useState<SortField>("name");
 
-  const [sortDirection, setSortDirection] =
-    useState<SortDirection>("asc");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const fetchEmployees = async () => {
-    try {
-      setLoading(true);
-      setError("");
-
-      const data = await getEmployees();
-
-      setEmployees(data.users);
-    } catch (error) {
-      console.error(error);
-      setError("Failed to fetch employees");
-    } finally {
-      setLoading(false);
-    }
-  };
+  
 
   useEffect(() => {
-    fetchEmployees();
-  }, []);
+    dispatch(fetchEmployees());
+  }, [dispatch]);
 
   // Get unique departments
   const departments = Array.from(
-    new Set(
-      employees.map(
-        (employee) => employee.company.department
-      )
-    )
+    new Set(employees.map((employee) => employee.company.department)),
   );
 
   // Get unique roles
   const roles = Array.from(
-    new Set(
-      employees.map(
-        (employee) => employee.company.title
-      )
-    )
+    new Set(employees.map((employee) => employee.company.title)),
   );
 
   // Search + Filter
   const filteredEmployees = employees.filter((employee) => {
-    const searchTerm = search
-      .toLowerCase()
-      .trim();
+    const searchTerm = search.toLowerCase().trim();
 
-    const fullName =
-      `${employee.firstName} ${employee.lastName}`.toLowerCase();
+    const fullName = `${employee.firstName} ${employee.lastName}`.toLowerCase();
 
     const matchesSearch =
       fullName.includes(searchTerm) ||
-      employee.email
-        .toLowerCase()
-        .includes(searchTerm);
+      employee.email.toLowerCase().includes(searchTerm);
 
     const matchesDepartment =
-      !department ||
-      employee.company.department === department;
+      !department || employee.company.department === department;
 
-    const matchesRole =
-      !role ||
-      employee.company.title === role;
+    const matchesRole = !role || employee.company.title === role;
 
-    return (
-      matchesSearch &&
-      matchesDepartment &&
-      matchesRole
-    );
+    return matchesSearch && matchesDepartment && matchesRole;
   });
 
   // Sorting
@@ -104,9 +72,7 @@ const Employees = () => {
     return `${employee.firstName} ${employee.lastName}`;
   };
 
-  const sortedEmployees = [
-    ...filteredEmployees,
-  ].sort((a, b) => {
+  const sortedEmployees = [...filteredEmployees].sort((a, b) => {
     let valueA = "";
     let valueB = "";
 
@@ -132,55 +98,32 @@ const Employees = () => {
         break;
     }
 
-    const comparison = valueA.localeCompare(
-      valueB,
-      undefined,
-      {
-        sensitivity: "base",
-      }
-    );
+    const comparison = valueA.localeCompare(valueB, undefined, {
+      sensitivity: "base",
+    });
 
-    return sortDirection === "asc"
-      ? comparison
-      : -comparison;
+    return sortDirection === "asc" ? comparison : -comparison;
   });
 
   // Pagination
-  const totalPages = Math.ceil(
-    sortedEmployees.length / ITEMS_PER_PAGE
-  );
+  const totalPages = Math.ceil(sortedEmployees.length / ITEMS_PER_PAGE);
 
-  const startIndex =
-    (currentPage - 1) * ITEMS_PER_PAGE;
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
 
-  const endIndex =
-    startIndex + ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
 
-  const paginatedEmployees =
-    sortedEmployees.slice(
-      startIndex,
-      endIndex
-    );
-    const showingFrom =
-  sortedEmployees.length === 0
-    ? 0
-    : startIndex + 1;
+  const paginatedEmployees = sortedEmployees.slice(startIndex, endIndex);
+  const showingFrom = sortedEmployees.length === 0 ? 0 : startIndex + 1;
 
-const showingTo = Math.min(
-  endIndex,
-  sortedEmployees.length
-);
+  const showingTo = Math.min(endIndex, sortedEmployees.length);
 
   // Sorting handler
   const handleSort = (field: SortField) => {
     setCurrentPage(1);
 
     if (sortField === field) {
-      setSortDirection(
-        (currentDirection) =>
-          currentDirection === "asc"
-            ? "desc"
-            : "asc"
+      setSortDirection((currentDirection) =>
+        currentDirection === "asc" ? "desc" : "asc",
       );
     } else {
       setSortField(field);
@@ -200,13 +143,12 @@ const showingTo = Math.min(
     setSortDirection("asc");
   };
 
-
   if (loading) {
-    return <LoadingState/>
+    return <LoadingState />;
   }
 
   if (error) {
-    return <ErrorState message={error} onRetry={fetchEmployees} />;
+    return <ErrorState message={error} onRetry={()=>{dispatch(fetchEmployees())}} />;
   }
 
   return (
@@ -214,8 +156,8 @@ const showingTo = Math.min(
       <h1>Employees</h1>
 
       <p>
-        Showing {showingFrom} - {showingTo} of{" "}
-        {sortedEmployees.length} employees
+        Showing {showingFrom} - {showingTo} of {sortedEmployees.length}{" "}
+        employees
       </p>
 
       <EmployeeToolbar
@@ -238,27 +180,24 @@ const showingTo = Math.min(
         }}
         onClearFilters={clearFilters}
       />
-    {sortedEmployees.length === 0 ? (
-  <EmptyState message="No employees found." />
-) : (
-  <>
-    <EmployeeTable
-      employees={paginatedEmployees}
-      sortField={sortField}
-      sortDirection={sortDirection}
-      onSort={handleSort}
-    />
+      {sortedEmployees.length === 0 ? (
+        <EmptyState message="No employees found." />
+      ) : (
+        <>
+          <EmployeeTable
+            employees={paginatedEmployees}
+            sortField={sortField}
+            sortDirection={sortDirection}
+            onSort={handleSort}
+          />
 
-    <EmployeePagination
-      currentPage={currentPage}
-      totalPages={totalPages}
-      onPageChange={setCurrentPage}
-    />
-  </>
-)}
-    
-
-      
+          <EmployeePagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </>
+      )}
     </div>
   );
 };
