@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getEmployees } from "../../services/employeeService";
 import type { Employee } from "../../types/employee";
+import EmployeeTable from "../../components/employees/EmployeeTable";
 
 const Employees = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -41,19 +42,7 @@ const Employees = () => {
 
       <p>Total Employees: {employees.length}</p>
 
-      {employees.map((employee) => (
-        <div key={employee.id}>
-          <h3>
-            {employee.firstName} {employee.lastName}
-          </h3>
-
-          <p>{employee.email}</p>
-
-          <p>{employee.company.department}</p>
-
-          <p>{employee.company.title}</p>
-        </div>
-      ))}
+      <EmployeeTable employees={employees} />
     </div>
   );
 };
