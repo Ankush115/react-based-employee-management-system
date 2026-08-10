@@ -3,7 +3,7 @@ import {
   createSlice,
 } from "@reduxjs/toolkit";
 
-import { getEmployees } from "../../services/employeeService";
+import { getEmployees,getEmployeeById } from "../../services/employeeService";
 
 import type { Employee } from "../../types/employee";
 
@@ -47,20 +47,10 @@ export const fetchEmployeeById =
       { rejectWithValue }
     ) => {
       try {
-        const response = await fetch(
-          `https://dummyjson.com/users/${employeeId}`
-        );
+        const data =
+          await getEmployeeById(employeeId);
 
-        if (!response.ok) {
-          throw new Error(
-            "Failed to fetch employee"
-          );
-        }
-
-        const data: Employee =
-          await response.json();
-
-        return data;
+        return data as Employee;
       } catch (error) {
         console.error(error);
 
