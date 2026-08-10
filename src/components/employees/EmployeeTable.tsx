@@ -2,18 +2,42 @@ import type { Employee } from "../../types/employee";
 
 interface EmployeeTableProps {
   employees: Employee[];
+  sortField: "name" | "email" | "department" | "role";
+  sortDirection: "asc" | "desc";
+  onSort: (
+    field: "name" | "email" | "department" | "role"
+  ) => void;
 }
 
-const EmployeeTable = ({ employees }: EmployeeTableProps) => {
+const EmployeeTable = ({ employees,sortField,
+  sortDirection,
+  onSort, }: EmployeeTableProps) => {
   return (
     <div>
       <table>
         <thead>
           <tr>
-            <th>Employee</th>
-            <th>Email</th>
-            <th>Department</th>
-            <th>Role</th>
+            <th onClick={() => onSort("name")}>
+              Employee
+              Employee
+        {sortField === "name" &&
+          (sortDirection === "asc" ? " ↑" : " ↓")}
+            </th>
+            <th onClick={() => onSort("email")}>
+              Email
+              {sortField === "email" &&
+                (sortDirection === "asc" ? " ↑" : " ↓")}
+            </th>
+            <th onClick={() => onSort("department")}>
+              Department
+              {sortField === "department" &&
+                (sortDirection === "asc" ? " ↑" : " ↓")}
+            </th>
+            <th onClick={() => onSort("role")}>
+              Role
+              {sortField === "role" &&
+                (sortDirection === "asc" ? " ↑" : " ↓")}
+            </th>
             <th>Phone</th>
             <th>Location</th>
           </tr>
