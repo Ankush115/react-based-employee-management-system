@@ -4,6 +4,9 @@ import type { Employee } from "../../types/employee";
 import EmployeeTable from "../../components/employees/EmployeeTable";
 import EmployeeToolbar from "../../components/employees/EmployeeToolbar";
 import EmployeePagination from "../../components/employees/EmployeePagination";
+import LoadingState from "../../components/common/LoadingState";
+import ErrorState from "../../components/common/ErrorState";
+import EmptyState from "../../components/common/EmptyState";
 
 type SortField = "name" | "email" | "department" | "role";
 
@@ -199,11 +202,11 @@ const showingTo = Math.min(
 
 
   if (loading) {
-    return <p>Loading employees...</p>;
+    return <LoadingState/>
   }
 
   if (error) {
-    return <p>{error}</p>;
+    return <ErrorState message={error} onRetry={fetchEmployees} />;
   }
 
   return (
@@ -235,19 +238,27 @@ const showingTo = Math.min(
         }}
         onClearFilters={clearFilters}
       />
+    {sortedEmployees.length === 0 ? (
+  <EmptyState message="No employees found." />
+) : (
+  <>
+    <EmployeeTable
+      employees={paginatedEmployees}
+      sortField={sortField}
+      sortDirection={sortDirection}
+      onSort={handleSort}
+    />
 
-      <EmployeeTable
-        employees={paginatedEmployees}
-        sortField={sortField}
-        sortDirection={sortDirection}
-        onSort={handleSort}
-      />
+    <EmployeePagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      onPageChange={setCurrentPage}
+    />
+  </>
+)}
+    
 
-      <EmployeePagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
+      
     </div>
   );
 };
