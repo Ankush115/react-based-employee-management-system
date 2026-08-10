@@ -1,32 +1,31 @@
 import type { Employee } from "../../types/employee";
+import { Link } from "react-router-dom";
 
 interface EmployeeTableProps {
   employees: Employee[];
   sortField: "name" | "email" | "department" | "role";
   sortDirection: "asc" | "desc";
-  onSort: (
-    field: "name" | "email" | "department" | "role"
-  ) => void;
+  onSort: (field: "name" | "email" | "department" | "role") => void;
 }
 
-const EmployeeTable = ({ employees,sortField,
+const EmployeeTable = ({
+  employees,
+  sortField,
   sortDirection,
-  onSort, }: EmployeeTableProps) => {
+  onSort,
+}: EmployeeTableProps) => {
   return (
     <div>
       <table>
         <thead>
           <tr>
             <th onClick={() => onSort("name")}>
-              Employee
-              Employee
-        {sortField === "name" &&
-          (sortDirection === "asc" ? " ↑" : " ↓")}
+              Employee Employee
+              {sortField === "name" && (sortDirection === "asc" ? " ↑" : " ↓")}
             </th>
             <th onClick={() => onSort("email")}>
               Email
-              {sortField === "email" &&
-                (sortDirection === "asc" ? " ↑" : " ↓")}
+              {sortField === "email" && (sortDirection === "asc" ? " ↑" : " ↓")}
             </th>
             <th onClick={() => onSort("department")}>
               Department
@@ -35,8 +34,7 @@ const EmployeeTable = ({ employees,sortField,
             </th>
             <th onClick={() => onSort("role")}>
               Role
-              {sortField === "role" &&
-                (sortDirection === "asc" ? " ↑" : " ↓")}
+              {sortField === "role" && (sortDirection === "asc" ? " ↑" : " ↓")}
             </th>
             <th>Phone</th>
             <th>Location</th>
@@ -56,7 +54,9 @@ const EmployeeTable = ({ employees,sortField,
                   />
 
                   <span>
-                    {employee.firstName} {employee.lastName}
+                    <Link to={`/employees/${employee.id}`}>
+                      {employee.firstName} {employee.lastName}
+                    </Link>
                   </span>
                 </div>
               </td>
