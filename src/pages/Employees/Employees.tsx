@@ -8,7 +8,11 @@ const Employees = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
   const [search, setSearch] = useState("");
+  const [department, setDepartment] = useState("");
+  const [role, setRole] = useState("");
+//   const [status, setStatus] = useState("");
 
   const fetchEmployees = async () => {
     try {
@@ -30,6 +34,44 @@ const Employees = () => {
     fetchEmployees();
   }, []);
 
+  const departments = Array.from(
+    new Set(
+      employees.map((employee) => employee.company.department)
+    )
+  );
+
+  const roles = Array.from(
+    new Set(
+      employees.map((employee) => employee.company.title)
+    )
+  );
+
+  const filteredEmployees = employees.filter((employee) => {
+  const searchTerm = search.toLowerCase().trim();
+
+  const fullName =
+    `${employee.firstName} ${employee.lastName}`.toLowerCase();
+
+  const matchesSearch =
+    fullName.includes(searchTerm) ||
+    employee.email.toLowerCase().includes(searchTerm);
+
+  const matchesDepartment =
+    !department ||
+    employee.company.department === department;
+
+  const matchesRole =
+    !role ||
+    employee.company.title === role;
+
+  return matchesSearch && matchesDepartment && matchesRole;
+});
+const clearFilters = () => {
+  setSearch("");
+  setDepartment("");
+  setRole("");
+};
+
   if (loading) {
     return <p>Loading employees...</p>;
   }
@@ -37,27 +79,28 @@ const Employees = () => {
   if (error) {
     return <p>{error}</p>;
   }
-const filteredEmployees = employees.filter((employee) => {
-  const searchTerm = search.toLowerCase();
 
-  const fullName =
-    `${employee.firstName} ${employee.lastName}`.toLowerCase();
-
-  return (
-    fullName.includes(searchTerm) ||
-    employee.email.toLowerCase().includes(searchTerm)
-  );
-});
   return (
     <div>
       <h1>Employees</h1>
 
-      <p>Total Employees: {employees.length}</p>
+      <p>
+        Showing {filteredEmployees.length} of{" "}
+        {employees.length} employees
+      </p>
 
-       <EmployeeToolbar
-      search={search}
-      onSearchChange={setSearch}
-    />
+      <EmployeeToolbar
+        search={search}
+        department={department}
+        role={role}
+        departments={departments}
+        roles={roles}
+        onSearchChange={setSearch}
+        onDepartmentChange={setDepartment}
+        onRoleChange={setRole}
+          onClearFilters={clearFilters}
+
+      />
 
       <EmployeeTable employees={filteredEmployees} />
     </div>
