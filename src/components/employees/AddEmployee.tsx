@@ -1,11 +1,15 @@
 import { useNavigate } from "react-router-dom";
-import {
-  useForm,
-} from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+
+import { employeeSchema } from "../../validations/employeeSchema";
+
 import {
-  employeeSchema,
-} from "../../validations/employeeSchema";
+  useAppDispatch,
+  useAppSelector,
+} from "../../store/hooks";
+
+import { addEmployee } from "../../store/slices/employeeSlice";
 
 interface EmployeeFormData {
   firstName: string;
@@ -20,6 +24,15 @@ interface EmployeeFormData {
 const AddEmployee = () => {
   const navigate = useNavigate();
 
+  const dispatch = useAppDispatch();
+
+  const {
+    loading,
+    error,
+  } = useAppSelector(
+    (state) => state.employees
+  );
+
   const {
     register,
     handleSubmit,
@@ -27,15 +40,21 @@ const AddEmployee = () => {
       errors,
     },
   } = useForm<EmployeeFormData>({
-  resolver: yupResolver(
-    employeeSchema
-  ),
-});
+    resolver: yupResolver(employeeSchema),
+  });
 
-  const onSubmit = (
+  const onSubmit = async (
     data: EmployeeFormData
   ) => {
-    console.log(data);
+    try {
+      await dispatch(
+        addEmployee(data)
+      ).unwrap();
+
+      navigate("/employees");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -45,59 +64,94 @@ const AddEmployee = () => {
       <form
         onSubmit={handleSubmit(onSubmit)}
       >
+        {error && (
+          <p>{error}</p>
+        )}
+
+        {/* First Name */}
         <div>
-          <label>First Name</label>
+          <label htmlFor="firstName">
+            First Name
+          </label>
 
           <input
+            id="firstName"
+            type="text"
             {...register("firstName")}
           />
 
           {errors.firstName && (
-  <p>{errors.firstName.message}</p>
-)}
+            <p>
+              {errors.firstName.message}
+            </p>
+          )}
         </div>
 
+        {/* Last Name */}
         <div>
-          <label>Last Name</label>
+          <label htmlFor="lastName">
+            Last Name
+          </label>
 
           <input
+            id="lastName"
+            type="text"
             {...register("lastName")}
           />
 
           {errors.lastName && (
-  <p>{errors.lastName.message}</p>
-)}
+            <p>
+              {errors.lastName.message}
+            </p>
+          )}
         </div>
 
+        {/* Email */}
         <div>
-          <label>Email</label>
+          <label htmlFor="email">
+            Email
+          </label>
 
           <input
+            id="email"
             type="email"
             {...register("email")}
           />
 
           {errors.email && (
-            <p>{errors.email.message}</p>
+            <p>
+              {errors.email.message}
+            </p>
           )}
         </div>
 
+        {/* Phone */}
         <div>
-          <label>Phone</label>
+          <label htmlFor="phone">
+            Phone
+          </label>
 
           <input
+            id="phone"
+            type="tel"
             {...register("phone")}
           />
 
           {errors.phone && (
-            <p>Phone is required</p>
+            <p>
+              {errors.phone.message}
+            </p>
           )}
         </div>
 
+        {/* Age */}
         <div>
-          <label>Age</label>
+          <label htmlFor="age">
+            Age
+          </label>
 
           <input
+            id="age"
             type="number"
             {...register("age", {
               valueAsNumber: true,
@@ -105,46 +159,70 @@ const AddEmployee = () => {
           />
 
           {errors.age && (
-            <p>Age is required</p>
+            <p>
+              {errors.age.message}
+            </p>
           )}
         </div>
 
+        {/* Department */}
         <div>
-          <label>Department</label>
+          <label htmlFor="department">
+            Department
+          </label>
 
           <input
+            id="department"
+            type="text"
             {...register("department")}
           />
 
           {errors.department && (
-            <p>Department is required</p>
+            <p>
+              {errors.department.message}
+            </p>
           )}
         </div>
 
+        {/* Role */}
         <div>
-          <label>Role</label>
+          <label htmlFor="role">
+            Role
+          </label>
 
           <input
+            id="role"
+            type="text"
             {...register("role")}
           />
 
           {errors.role && (
-            <p>Role is required</p>
+            <p>
+              {errors.role.message}
+            </p>
           )}
         </div>
 
-        <button type="submit">
-          Create Employee
-        </button>
+        {/* Actions */}
+        <div>
+          <button
+            type="submit"
+            disabled={loading}
+          >
+            {loading
+              ? "Creating..."
+              : "Create Employee"}
+          </button>
 
-        <button
-          type="button"
-          onClick={() =>
-            navigate("/employees")
-          }
-        >
-          Cancel
-        </button>
+          <button
+            type="button"
+            onClick={() =>
+              navigate("/employees")
+            }
+          >
+            Cancel
+          </button>
+        </div>
       </form>
     </div>
   );

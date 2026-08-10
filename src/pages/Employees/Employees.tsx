@@ -36,8 +36,10 @@ const Employees = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
+  if (employees.length === 0) {
     dispatch(fetchEmployees());
-  }, [dispatch]);
+  }
+}, [dispatch, employees.length]);
 
   // Get unique departments
   const departments = Array.from(
@@ -144,19 +146,19 @@ const Employees = () => {
   };
 
   if (loading) {
-    return <LoadingState />;
-  }
+  return <LoadingState />;
+}
 
   if (error) {
-    return (
-      <ErrorState
-        message={error}
-        onRetry={() => {
-          dispatch(fetchEmployees());
-        }}
-      />
-    );
-  }
+  return (
+    <ErrorState
+      message={error}
+      onRetry={() => {
+        dispatch(fetchEmployees());
+      }}
+    />
+  );
+}
 
   return (
     <div>

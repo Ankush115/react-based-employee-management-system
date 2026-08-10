@@ -8,6 +8,7 @@ interface EmployeeTableProps {
   onSort: (field: "name" | "email" | "department" | "role") => void;
 }
 
+
 const EmployeeTable = ({
   employees,
   sortField,
@@ -47,10 +48,13 @@ const EmployeeTable = ({
               <td>
                 <div>
                   <img
-                    src={employee.image}
+                    src={
+                      employee.image ||
+                      `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                        `${employee.firstName} ${employee.lastName}`,
+                      )}`
+                    }
                     alt={`${employee.firstName} ${employee.lastName}`}
-                    width="40"
-                    height="40"
                   />
 
                   <span>
