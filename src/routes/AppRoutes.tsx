@@ -1,25 +1,19 @@
-import { BrowserRouter, Routes, Route, } from "react-router-dom"
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-// import Dashboard from "../pages/Dashboard/Dashboard"
-import Employees from "../pages/Employees/Employees"
-// import Departments from "../pages/Departments/Departments"
-import EmployeeDetails from "../components/employees/EmployeeDetails"
+import Employees from "../pages/Employees/Employees";
+import EmployeeDetails from "../components/employees/EmployeeDetails";
+import AddEmployee from "../components/employees/AddEmployee";
 
 const AppRoutes = () => {
   return (
     <BrowserRouter>
-        <Routes>
-        <Route
-          path="/employees"
-          element={<Employees />}
-        />
-        <Route
-    path="/employees/:id"
-    element={<EmployeeDetails />}
-  />
+      <Routes>
+        <Route path="/employees" element={<Employees />} />
+        <Route path="/employees/:id" element={<EmployeeDetails />} />
+        <Route path="/employees/add" element={<AddEmployee />} />
       </Routes>
     </BrowserRouter>
-  )
-}
+  );
+};
 
-export default AppRoutes
+export default AppRoutes;

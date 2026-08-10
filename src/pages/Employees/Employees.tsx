@@ -9,6 +9,7 @@ import ErrorState from "../../components/common/ErrorState";
 import EmptyState from "../../components/common/EmptyState";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchEmployees } from "../../store/slices/employeeSlice";
+import { useNavigate } from "react-router-dom";
 
 type SortField = "name" | "email" | "department" | "role";
 
@@ -17,6 +18,7 @@ type SortDirection = "asc" | "desc";
 const ITEMS_PER_PAGE = 10;
 
 const Employees = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const { employees, loading, error } = useAppSelector(
@@ -32,8 +34,6 @@ const Employees = () => {
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
 
   const [currentPage, setCurrentPage] = useState(1);
-
-  
 
   useEffect(() => {
     dispatch(fetchEmployees());
@@ -148,13 +148,22 @@ const Employees = () => {
   }
 
   if (error) {
-    return <ErrorState message={error} onRetry={()=>{dispatch(fetchEmployees())}} />;
+    return (
+      <ErrorState
+        message={error}
+        onRetry={() => {
+          dispatch(fetchEmployees());
+        }}
+      />
+    );
   }
 
   return (
     <div>
       <h1>Employees</h1>
-
+      <button type="button" onClick={() => navigate("/employees/add")}>
+        Add Employee
+      </button>
       <p>
         Showing {showingFrom} - {showingTo} of {sortedEmployees.length}{" "}
         employees

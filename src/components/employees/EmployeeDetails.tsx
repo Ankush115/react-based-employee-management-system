@@ -17,6 +17,7 @@ import LoadingState from "../../components/common/LoadingState";
 import ErrorState from "../../components/common/ErrorState";
 import EmptyState from "../../components/common/EmptyState";
 
+
 const EmployeeDetails = () => {
   const { id } = useParams<{
     id: string;
