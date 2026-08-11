@@ -10,10 +10,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchEmployees } from "../../store/slices/employeeSlice";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../store/slices/authSlice";
-
-type SortField = "name" | "email" | "department" | "role";
-
-type SortDirection = "asc" | "desc";
+import type { SortField, SortDirection } from "../../types/employeeTable";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -103,6 +100,21 @@ const Employees = () => {
         valueA = a.company.title;
         valueB = b.company.title;
         break;
+
+      case "company":
+        valueA = a.company.name;
+        valueB = b.company.name;
+        break;
+
+      case "phone":
+        valueA = a.phone;
+        valueB = b.phone;
+        break;
+
+      case "location":
+        valueA = a.address.city;
+        valueB = b.address.city;
+        break;
     }
 
     const comparison = valueA.localeCompare(valueB, undefined, {
@@ -171,15 +183,24 @@ const Employees = () => {
         <div>
           <h1>Employees</h1>
           <p className="summary-text">
-            Showing {showingFrom} - {showingTo} of {sortedEmployees.length} employees
+            Showing {showingFrom} - {showingTo} of {sortedEmployees.length}{" "}
+            employees
           </p>
         </div>
 
         <div className="header-actions">
-          <button type="button" className="primary-button" onClick={() => navigate("/employees/add")}> 
+          <button
+            type="button"
+            className="primary-button"
+            onClick={() => navigate("/employees/add")}
+          >
             Add Employee
           </button>
-          <button type="button" className="secondary-button" onClick={handleLogout}>
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={handleLogout}
+          >
             Logout
           </button>
         </div>

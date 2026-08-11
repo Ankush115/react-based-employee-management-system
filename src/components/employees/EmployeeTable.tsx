@@ -1,29 +1,12 @@
 import type { Employee } from "../../types/employee";
 import { Link } from "react-router-dom";
+import type { SortField } from "../../types/employeeTable";
 
 interface EmployeeTableProps {
   employees: Employee[];
-  sortField:
-    | "name"
-    | "email"
-    | "department"
-    | "role"
-    | "birthDate"
-    | "location"
-    | "company"
-    | "phone";
+  sortField: SortField;
   sortDirection: "asc" | "desc";
-  onSort: (
-    field:
-      | "name"
-      | "email"
-      | "department"
-      | "role"
-      | "birthDate"
-      | "location"
-      | "company"
-      | "phone",
-  ) => void;
+  onSort: (field: SortField) => void;
 }
 
 const EmployeeTable = ({
@@ -32,17 +15,7 @@ const EmployeeTable = ({
   sortDirection,
   onSort,
 }: EmployeeTableProps) => {
-  const getSortIcon = (
-    field:
-      | "name"
-      | "email"
-      | "department"
-      | "role"
-      | "birthDate"
-      | "location"
-      | "company"
-      | "phone",
-  ) => {
+  const getSortIcon = (field: SortField) => {
     if (sortField !== field) return null;
 
     return sortDirection === "asc" ? " ↑" : " ↓";
@@ -72,15 +45,18 @@ const EmployeeTable = ({
               Designation
               {getSortIcon("role")}
             </th>
-            <th onClick={() => onSort("company")}>
-              Company{getSortIcon("company")}
+            <th className="sortable" onClick={() => onSort("company")}>
+              Company
+              {getSortIcon("company")}
             </th>
 
-            <th onClick={() => onSort("location")}>
-              Location{getSortIcon("location")}
+            <th className="sortable" onClick={() => onSort("location")}>
+              Location
+              {getSortIcon("location")}
             </th>
-            <th onClick={() => onSort("phone")}>
-              Phone{getSortIcon("phone")}
+            <th className="sortable" onClick={() => onSort("phone")}>
+              Phone
+              {getSortIcon("phone")}
             </th>
           </tr>
         </thead>
