@@ -44,4 +44,7 @@ export const employeeSchema =
     role: yup
       .string()
       .required("Role is required"),
+    company: yup
+      .string()
+      .required("Company is required"),
   });
