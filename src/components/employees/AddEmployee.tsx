@@ -1,37 +1,21 @@
 import { useNavigate } from "react-router-dom";
 
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
-import {
-  addEmployee,
-} from "../../store/slices/employeeSlice";
+import { addEmployee } from "../../store/slices/employeeSlice";
 
-import EmployeeForm, {
-  type EmployeeFormData,
-} from "./EmployeeForm";
+import EmployeeForm, { type EmployeeFormData } from "./EmployeeForm";
 
 const AddEmployee = () => {
   const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
 
-  const {
-    loading,
-    error,
-  } = useAppSelector(
-    (state) => state.employees
-  );
+  const { actionLoading, error } = useAppSelector((state) => state.employees);
 
-  const onSubmit = async (
-    data: EmployeeFormData
-  ) => {
+  const onSubmit = async (data: EmployeeFormData) => {
     try {
-      await dispatch(
-        addEmployee(data)
-      ).unwrap();
+      await dispatch(addEmployee(data)).unwrap();
 
       navigate("/employees");
     } catch (error) {
@@ -44,13 +28,11 @@ const AddEmployee = () => {
       <h1>Add Employee</h1>
 
       <EmployeeForm
-        loading={loading}
+        loading={actionLoading}
         error={error}
         submitLabel="Create Employee"
         onSubmit={onSubmit}
-        onCancel={() =>
-          navigate("/employees")
-        }
+        onCancel={() => navigate("/employees")}
       />
     </div>
   );

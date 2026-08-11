@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-
+import { useEffect } from "react";
 import { employeeSchema } from "../../validations/employeeSchema";
 
 export interface EmployeeFormData {
@@ -18,9 +18,7 @@ interface EmployeeFormProps {
   loading?: boolean;
   error?: string | null;
   submitLabel?: string;
-  onSubmit: (
-    data: EmployeeFormData
-  ) => void | Promise<void>;
+  onSubmit: (data: EmployeeFormData) => void | Promise<void>;
   onCancel: () => void;
 }
 
@@ -32,173 +30,109 @@ const EmployeeForm = ({
   onSubmit,
   onCancel,
 }: EmployeeFormProps) => {
- const {
-  register,
-  handleSubmit,
-  formState: { errors },
-} = useForm<EmployeeFormData>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<EmployeeFormData>({
     resolver: yupResolver(employeeSchema),
     defaultValues: initialValues,
   });
+  useEffect(() => {
+    if (initialValues) {
+      reset(initialValues);
+    }
+  }, [initialValues, reset]);
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      {error && (
-        <p>{error}</p>
-      )}
+    <form className="employee-form" onSubmit={handleSubmit(onSubmit)}>
+      {error && <p className="form-server-error">{error}</p>}
 
       {/* First Name */}
-      <div>
-        <label htmlFor="firstName">
-          First Name
-        </label>
+      <div className="form-grid">
+        <div className="form-field">
+          <label htmlFor="firstName">First Name</label>
 
-        <input
-          id="firstName"
-          type="text"
-          {...register("firstName")}
-        />
+          <input id="firstName" type="text" {...register("firstName")} />
 
-        {errors.firstName && (
-          <p>
-            {errors.firstName.message}
-          </p>
-        )}
-      </div>
+          {errors.firstName && <p>{errors.firstName.message}</p>}
+        </div>
 
-      {/* Last Name */}
-      <div>
-        <label htmlFor="lastName">
-          Last Name
-        </label>
+        {/* Last Name */}
+        <div className="form-field">
+          <label htmlFor="lastName">Last Name</label>
 
-        <input
-          id="lastName"
-          type="text"
-          {...register("lastName")}
-        />
+          <input id="lastName" type="text" {...register("lastName")} />
 
-        {errors.lastName && (
-          <p>
-            {errors.lastName.message}
-          </p>
-        )}
-      </div>
+          {errors.lastName && (
+            <p className="form-error">{errors.lastName.message}</p>
+          )}
+        </div>
 
-      {/* Email */}
-      <div>
-        <label htmlFor="email">
-          Email
-        </label>
+        {/* Email */}
+        <div className="form-field">
+          <label htmlFor="email">Email</label>
 
-        <input
-          id="email"
-          type="email"
-          {...register("email")}
-        />
+          <input id="email" type="email" {...register("email")} />
 
-        {errors.email && (
-          <p>
-            {errors.email.message}
-          </p>
-        )}
-      </div>
+          {errors.email && <p className="form-error">{errors.email.message}</p>}
+        </div>
 
-      {/* Phone */}
-      <div>
-        <label htmlFor="phone">
-          Phone
-        </label>
+        {/* Phone */}
+        <div className="form-field">
+          <label htmlFor="phone">Phone</label>
 
-        <input
-          id="phone"
-          type="tel"
-          {...register("phone")}
-        />
+          <input id="phone" type="tel" {...register("phone")} />
 
-        {errors.phone && (
-          <p>
-            {errors.phone.message}
-          </p>
-        )}
-      </div>
+          {errors.phone && <p className="form-error">{errors.phone.message}</p>}
+        </div>
 
-      {/* Age */}
-      <div>
-        <label htmlFor="age">
-          Age
-        </label>
+        {/* Age */}
+        <div className="form-field">
+          <label htmlFor="age">Age</label>
 
-        <input
-          id="age"
-          type="number"
-          {...register("age", {
-            valueAsNumber: true,
-          })}
-        />
+          <input
+            id="age"
+            type="number"
+            {...register("age", {
+              valueAsNumber: true,
+            })}
+          />
 
-        {errors.age && (
-          <p>
-            {errors.age.message}
-          </p>
-        )}
-      </div>
+          {errors.age && <p className="form-error">{errors.age.message}</p>}
+        </div>
 
-      {/* Department */}
-      <div>
-        <label htmlFor="department">
-          Department
-        </label>
+        {/* Department */}
+        <div className="form-field">
+          <label htmlFor="department">Department</label>
 
-        <input
-          id="department"
-          type="text"
-          {...register("department")}
-        />
+          <input id="department" type="text" {...register("department")} />
 
-        {errors.department && (
-          <p>
-            {errors.department.message}
-          </p>
-        )}
-      </div>
+          {errors.department && <p>{errors.department.message}</p>}
+        </div>
 
-      {/* Role */}
-      <div>
-        <label htmlFor="role">
-          Role
-        </label>
+        {/* Role */}
+        <div className="form-field">
+          <label htmlFor="role">Role</label>
 
-        <input
-          id="role"
-          type="text"
-          {...register("role")}
-        />
+          <input id="role" type="text" {...register("role")} />
 
-        {errors.role && (
-          <p>
-            {errors.role.message}
-          </p>
-        )}
+          {errors.role && <p className="form-error">{errors.role.message}</p>}
+        </div>
       </div>
 
       {/* Actions */}
-      <div>
-        <button
-          type="submit"
-          disabled={loading}
-        >
-          {loading
-            ? "Saving..."
-            : submitLabel}
+      <div className="form-actions">
+        <button type="submit" disabled={loading} className="primary-button">
+          {loading ? "Saving..." : submitLabel}
         </button>
 
         <button
           type="button"
           onClick={onCancel}
           disabled={loading}
+          className="secondary-button"
         >
           Cancel
         </button>

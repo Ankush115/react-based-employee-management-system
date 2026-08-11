@@ -1,13 +1,7 @@
 import { useEffect } from "react";
-import {
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
 import {
   fetchEmployeeById,
@@ -26,28 +20,14 @@ const EmployeeDetails = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const {
-    selectedEmployee,
-    loading,
-    error,
-  } = useAppSelector(
-    (state) => state.employees,
-  );
+  const { selectedEmployee, detailsLoading, actionLoading, error } =
+    useAppSelector((state) => state.employees);
 
   useEffect(() => {
-    if (
-      id &&
-      selectedEmployee?.id !== Number(id)
-    ) {
-      dispatch(
-        fetchEmployeeById(id),
-      );
+    if (id && selectedEmployee?.id !== Number(id)) {
+      dispatch(fetchEmployeeById(id));
     }
-  }, [
-    id,
-    dispatch,
-    selectedEmployee?.id,
-  ]);
+  }, [id, dispatch, selectedEmployee?.id]);
 
   const handleDelete = async () => {
     if (!selectedEmployee) {
@@ -63,22 +43,15 @@ const EmployeeDetails = () => {
     }
 
     try {
-      await dispatch(
-        deleteEmployee(
-          String(selectedEmployee.id),
-        ),
-      ).unwrap();
+      await dispatch(deleteEmployee(String(selectedEmployee.id))).unwrap();
 
       navigate("/employees");
     } catch (error) {
-      console.error(
-        "Delete failed:",
-        error,
-      );
+      console.error("Delete failed:", error);
     }
   };
 
-  if (loading && !selectedEmployee) {
+  if (detailsLoading && !selectedEmployee) {
     return <LoadingState />;
   }
 
@@ -88,9 +61,7 @@ const EmployeeDetails = () => {
         message={error}
         onRetry={() => {
           if (id) {
-            dispatch(
-              fetchEmployeeById(id),
-            );
+            dispatch(fetchEmployeeById(id));
           }
         }}
       />
@@ -98,11 +69,7 @@ const EmployeeDetails = () => {
   }
 
   if (!selectedEmployee) {
-    return (
-      <EmptyState
-        message="Employee not found."
-      />
-    );
+    return <EmptyState message="Employee not found." />;
   }
 
   const fullName = `${selectedEmployee.firstName} ${selectedEmployee.lastName}`;
@@ -113,144 +80,123 @@ const EmployeeDetails = () => {
       <div className="employee-details-header">
         <button
           type="button"
-          onClick={() =>
-            navigate("/employees")
-          }
+          className="back-button"
+          onClick={() => navigate("/employees")}
         >
           ← Back to Employees
         </button>
 
-        <div>
+        <div className="employee-details-actions">
           <button
             type="button"
-            onClick={() =>
-              navigate(
-                `/employees/${selectedEmployee.id}/edit`,
-              )
-            }
+            className="secondary-button"
+            onClick={() => navigate(`/employees/${selectedEmployee.id}/edit`)}
           >
             Edit
           </button>
 
           <button
             type="button"
+            className="danger-button"
             onClick={handleDelete}
+            disabled={actionLoading}
           >
-            Delete
+            {actionLoading ? "Deleting..." : "Delete"}
           </button>
         </div>
       </div>
 
-      {/* Profile */}
-      <section className="employee-profile">
-        <img
-          className="employee-profile-image"
-          src={
-            selectedEmployee.image ||
-            `https://ui-avatars.com/api/?name=${encodeURIComponent(
-              fullName,
-            )}`
-          }
-          alt={fullName}
-        />
+      {/* Employee Profile */}
+      <section className="employee-profile-card">
+        <div className="employee-profile">
+          <img
+            className="employee-profile-image"
+            src={
+              selectedEmployee.image ||
+              `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}`
+            }
+            alt={fullName}
+          />
 
-        <div>
-          <h1>{fullName}</h1>
+          <div className="employee-profile-info">
+            <h1>{fullName}</h1>
 
-          <p>
-            {selectedEmployee.company.title}
-          </p>
+            <p className="employee-role">{selectedEmployee.company.title}</p>
 
-          <p>
-            {selectedEmployee.company.department}
-          </p>
+            <p className="employee-department">
+              {selectedEmployee.company.department}
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* Contact Information */}
-      <section>
-        <h2>Contact Information</h2>
+      {/* Information Grid */}
+      <div className="employee-info-grid">
+        {/* Contact Information */}
+        <section className="employee-info-card">
+          <h2>Contact Information</h2>
 
-        <div>
-          <strong>Email</strong>
-          <p>
-            {selectedEmployee.email}
-          </p>
-        </div>
+          <div className="info-item">
+            <strong>Email</strong>
+            <p>{selectedEmployee.email}</p>
+          </div>
 
-        <div>
-          <strong>Phone</strong>
-          <p>
-            {selectedEmployee.phone}
-          </p>
-        </div>
+          <div className="info-item">
+            <strong>Phone</strong>
+            <p>{selectedEmployee.phone}</p>
+          </div>
 
-        <div>
-          <strong>Age</strong>
-          <p>
-            {selectedEmployee.age}
-          </p>
-        </div>
-      </section>
+          <div className="info-item">
+            <strong>Age</strong>
+            <p>{selectedEmployee.age}</p>
+          </div>
+        </section>
 
-      {/* Company Information */}
-      <section>
-        <h2>Company Information</h2>
+        {/* Company Information */}
+        <section className="employee-info-card">
+          <h2>Company Information</h2>
 
-        <div>
-          <strong>Company</strong>
-          <p>
-            {selectedEmployee.company.name}
-          </p>
-        </div>
+          <div className="info-item">
+            <strong>Company</strong>
+            <p>{selectedEmployee.company.name}</p>
+          </div>
 
-        <div>
-          <strong>Department</strong>
-          <p>
-            {selectedEmployee.company.department}
-          </p>
-        </div>
+          <div className="info-item">
+            <strong>Department</strong>
+            <p>{selectedEmployee.company.department}</p>
+          </div>
 
-        <div>
-          <strong>Designation</strong>
-          <p>
-            {selectedEmployee.company.title}
-          </p>
-        </div>
-      </section>
+          <div className="info-item">
+            <strong>Designation</strong>
+            <p>{selectedEmployee.company.title}</p>
+          </div>
+        </section>
 
-      {/* Address */}
-      <section>
-        <h2>Address</h2>
+        {/* Address */}
+        <section className="employee-info-card">
+          <h2>Address</h2>
 
-        <div>
-          <strong>Address</strong>
-          <p>
-            {selectedEmployee.address.address}
-          </p>
-        </div>
+          <div className="info-item">
+            <strong>Address</strong>
+            <p>{selectedEmployee.address.address}</p>
+          </div>
 
-        <div>
-          <strong>City</strong>
-          <p>
-            {selectedEmployee.address.city}
-          </p>
-        </div>
+          <div className="info-item">
+            <strong>City</strong>
+            <p>{selectedEmployee.address.city}</p>
+          </div>
 
-        <div>
-          <strong>State</strong>
-          <p>
-            {selectedEmployee.address.state}
-          </p>
-        </div>
+          <div className="info-item">
+            <strong>State</strong>
+            <p>{selectedEmployee.address.state}</p>
+          </div>
 
-        <div>
-          <strong>Postal Code</strong>
-          <p>
-            {selectedEmployee.address.postalCode}
-          </p>
-        </div>
-      </section>
+          <div className="info-item">
+            <strong>Postal Code</strong>
+            <p>{selectedEmployee.address.postalCode}</p>
+          </div>
+        </section>
+      </div>
     </div>
   );
 };

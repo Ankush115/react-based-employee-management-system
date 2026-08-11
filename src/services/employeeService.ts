@@ -46,36 +46,26 @@ export const updateEmployee = async (
     age: number;
     department: string;
     role: string;
-  }
+  },
 ) => {
-  const response = await api.put(
-    `/users/${employeeId}`,
-    {
-      firstName: employeeData.firstName,
-      lastName: employeeData.lastName,
-      email: employeeData.email,
-      phone: employeeData.phone,
-      age: employeeData.age,
-      company: {
-        department: employeeData.department,
-        title: employeeData.role,
-      },
-    }
-  );
+  const response = await api.put(`/users/${employeeId}`, {
+    firstName: employeeData.firstName,
+    lastName: employeeData.lastName,
+    email: employeeData.email,
+    phone: employeeData.phone,
+    age: employeeData.age,
+    company: {
+      department: employeeData.department,
+      title: employeeData.role,
+    },
+  });
 
-  console.log(
-    "API update response:",
-    response.data
-  );
+  console.log("API update response:", response.data);
 
   return response.data;
 };
-export const deleteEmployee = async (
-  employeeId: string,
-) => {
-  const response = await api.delete(
-    `/users/${employeeId}`,
-  );
+export const deleteEmployee = async (employeeId: string) => {
+  const response = await api.delete(`/users/${employeeId}`);
 
   return response.data;
 };

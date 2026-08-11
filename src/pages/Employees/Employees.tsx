@@ -11,19 +11,15 @@ import {
   fetchEmployees,
   deleteEmployee,
 } from "../../store/slices/employeeSlice";
-import { useNavigate } from "react-router-dom";
-import { logout } from "../../store/slices/authSlice";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import type { SortField, SortDirection } from "../../types/employeeTable";
 
 const ITEMS_PER_PAGE = 5;
 
 const Employees = () => {
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const handleLogout = () => {
-    dispatch(logout());
 
-    navigate("/login");
-  };
   const dispatch = useAppDispatch();
 
   const { employees, loading, error } = useAppSelector(
@@ -31,7 +27,9 @@ const Employees = () => {
   );
 
   const [search, setSearch] = useState("");
-  const [department, setDepartment] = useState("");
+  const [department, setDepartment] = useState(
+    searchParams.get("department") || "",
+  );
   const [role, setRole] = useState("");
 
   const [sortField, setSortField] = useState<SortField>("name");
@@ -219,13 +217,6 @@ const Employees = () => {
           >
             Add Employee
           </button>
-          <button
-            type="button"
-            className="secondary-button"
-            onClick={handleLogout}
-          >
-            Logout
-          </button>
         </div>
       </div>
 
@@ -242,6 +233,18 @@ const Employees = () => {
         onDepartmentChange={(value) => {
           setDepartment(value);
           setCurrentPage(1);
+
+          const params = new URLSearchParams(searchParams);
+
+          if (value) {
+            params.set("department", value);
+          } else {
+            params.delete("department");
+          }
+
+          const query = params.toString();
+
+          navigate(query ? `/employees?${query}` : "/employees");
         }}
         onRoleChange={(value) => {
           setRole(value);

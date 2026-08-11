@@ -1,23 +1,15 @@
 import { useEffect } from "react";
 
-import {
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
 import {
   fetchEmployeeById,
   updateEmployee,
 } from "../../store/slices/employeeSlice";
 
-import EmployeeForm, {
-  type EmployeeFormData,
-} from "./EmployeeForm";
+import EmployeeForm, { type EmployeeFormData } from "./EmployeeForm";
 
 import LoadingState from "../common/LoadingState";
 import ErrorState from "../common/ErrorState";
@@ -32,32 +24,16 @@ const EditEmployee = () => {
 
   const dispatch = useAppDispatch();
 
-  const {
-    selectedEmployee,
-    loading,
-    error,
-  } = useAppSelector(
-    (state) => state.employees
-  );
+  const { selectedEmployee, detailsLoading, actionLoading, error } =
+    useAppSelector((state) => state.employees);
 
   useEffect(() => {
-    if (
-      id &&
-      selectedEmployee?.id !== Number(id)
-    ) {
-      dispatch(
-        fetchEmployeeById(id)
-      );
+    if (id && selectedEmployee?.id !== Number(id)) {
+      dispatch(fetchEmployeeById(id));
     }
-  }, [
-    id,
-    dispatch,
-    selectedEmployee?.id,
-  ]);
+  }, [id, dispatch, selectedEmployee?.id]);
 
-  const onSubmit = async (
-    data: EmployeeFormData
-  ) => {
+  const onSubmit = async (data: EmployeeFormData) => {
     if (!id) {
       return;
     }
@@ -67,21 +43,16 @@ const EditEmployee = () => {
         updateEmployee({
           employeeId: id,
           employeeData: data,
-        })
+        }),
       ).unwrap();
 
-      navigate(
-        `/employees/${id}`
-      );
+      navigate(`/employees/${id}`);
     } catch (error) {
-      console.error(
-        "Update failed:",
-        error
-      );
+      console.error("Update failed:", error);
     }
   };
 
-  if (loading && !selectedEmployee) {
+  if (detailsLoading && !selectedEmployee) {
     return <LoadingState />;
   }
 
@@ -91,9 +62,7 @@ const EditEmployee = () => {
         message={error}
         onRetry={() => {
           if (id) {
-            dispatch(
-              fetchEmployeeById(id)
-            );
+            dispatch(fetchEmployeeById(id));
           }
         }}
       />
@@ -101,34 +70,23 @@ const EditEmployee = () => {
   }
 
   if (!selectedEmployee) {
-    return (
-      <EmptyState
-        message="Employee not found."
-      />
-    );
+    return <EmptyState message="Employee not found." />;
   }
 
   const initialValues: EmployeeFormData = {
-    firstName:
-      selectedEmployee.firstName,
+    firstName: selectedEmployee.firstName,
 
-    lastName:
-      selectedEmployee.lastName,
+    lastName: selectedEmployee.lastName,
 
-    email:
-      selectedEmployee.email,
+    email: selectedEmployee.email,
 
-    phone:
-      selectedEmployee.phone,
+    phone: selectedEmployee.phone,
 
-    age:
-      selectedEmployee.age,
+    age: selectedEmployee.age,
 
-    department:
-      selectedEmployee.company.department,
+    department: selectedEmployee.company.department,
 
-    role:
-      selectedEmployee.company.title,
+    role: selectedEmployee.company.title,
   };
 
   return (
@@ -137,15 +95,11 @@ const EditEmployee = () => {
 
       <EmployeeForm
         initialValues={initialValues}
-        loading={loading}
+        loading={actionLoading}
         error={error}
         submitLabel="Update Employee"
         onSubmit={onSubmit}
-        onCancel={() =>
-          navigate(
-            `/employees/${selectedEmployee.id}`
-          )
-        }
+        onCancel={() => navigate(`/employees/${selectedEmployee.id}`)}
       />
     </div>
   );
