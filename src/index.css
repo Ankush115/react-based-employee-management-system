@@ -522,3 +522,111 @@ select:focus {
     justify-content: center;
   }
 }
+/* =========================
+   Employee Details
+========================= */
+
+.employee-details {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 24px;
+}
+
+.employee-details-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.employee-details-header > div {
+  display: flex;
+  gap: 10px;
+}
+
+.employee-details-header button {
+  padding: 10px 18px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.employee-details-header button:hover {
+  background: #f3f4f6;
+}
+
+/* Profile */
+
+.employee-profile {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 30px;
+  margin-bottom: 24px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+
+.employee-profile-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.employee-profile h1 {
+  margin: 0 0 10px;
+  font-size: 32px;
+}
+
+.employee-profile p {
+  margin: 5px 0;
+  color: #6b7280;
+}
+
+/* Information sections */
+
+.employee-details section:not(.employee-profile) {
+  margin-bottom: 24px;
+  padding: 24px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+
+.employee-details section h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+
+/* Information items */
+
+.employee-details section:not(.employee-profile) > div {
+  margin-bottom: 16px;
+}
+
+.employee-details section strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #374151;
+}
+
+.employee-details section p {
+  margin: 0;
+  color: #6b7280;
+}
+
+/* Delete button */
+
+.employee-details-header button:last-child {
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+.employee-details-header button:last-child:hover {
+  background: #fef2f2;
+}

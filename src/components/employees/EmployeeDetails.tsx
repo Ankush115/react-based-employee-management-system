@@ -1,9 +1,18 @@
 import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import {
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../store/hooks";
 
-import { fetchEmployeeById } from "../../store/slices/employeeSlice";
+import {
+  fetchEmployeeById,
+  deleteEmployee,
+} from "../../store/slices/employeeSlice";
 
 import LoadingState from "../../components/common/LoadingState";
 import ErrorState from "../../components/common/ErrorState";
@@ -15,30 +24,73 @@ const EmployeeDetails = () => {
   }>();
 
   const navigate = useNavigate();
-
   const dispatch = useAppDispatch();
 
-  const { selectedEmployee, loading, error } = useAppSelector(
+  const {
+    selectedEmployee,
+    loading,
+    error,
+  } = useAppSelector(
     (state) => state.employees,
   );
 
   useEffect(() => {
-    if (id && selectedEmployee?.id !== Number(id)) {
-      dispatch(fetchEmployeeById(id));
+    if (
+      id &&
+      selectedEmployee?.id !== Number(id)
+    ) {
+      dispatch(
+        fetchEmployeeById(id),
+      );
     }
-  }, [id, dispatch, selectedEmployee?.id]);
+  }, [
+    id,
+    dispatch,
+    selectedEmployee?.id,
+  ]);
 
-  if (loading) {
+  const handleDelete = async () => {
+    if (!selectedEmployee) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Are you sure you want to delete ${selectedEmployee.firstName} ${selectedEmployee.lastName}?`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      await dispatch(
+        deleteEmployee(
+          String(selectedEmployee.id),
+        ),
+      ).unwrap();
+
+      navigate("/employees");
+    } catch (error) {
+      console.error(
+        "Delete failed:",
+        error,
+      );
+    }
+  };
+
+  if (loading && !selectedEmployee) {
     return <LoadingState />;
   }
 
-  if (error) {
+  if (error && !selectedEmployee) {
     return (
       <ErrorState
         message={error}
         onRetry={() => {
           if (id) {
-            dispatch(fetchEmployeeById(id));
+            dispatch(
+              fetchEmployeeById(id),
+            );
           }
         }}
       />
@@ -46,86 +98,159 @@ const EmployeeDetails = () => {
   }
 
   if (!selectedEmployee) {
-    return <EmptyState message="Employee not found." />;
+    return (
+      <EmptyState
+        message="Employee not found."
+      />
+    );
   }
 
+  const fullName = `${selectedEmployee.firstName} ${selectedEmployee.lastName}`;
+
   return (
-    <div className="page-shell">
-      <div className="content-card">
-        <div className="button-row">
-          <button className="secondary-button" type="button" onClick={() => navigate("/employees")}>Back to Employees</button>
-          <button className="primary-button" type="button" onClick={() => navigate(`/employees/${selectedEmployee.id}/edit`)}>Edit Employee</button>
-        </div>
+    <div className="employee-details">
+      {/* Header */}
+      <div className="employee-details-header">
+        <button
+          type="button"
+          onClick={() =>
+            navigate("/employees")
+          }
+        >
+          ← Back to Employees
+        </button>
 
-        <div className="detail-grid">
-          <section className="profile-card">
-            <img
-              className="profile-avatar"
-              src={
-                selectedEmployee.image ||
-                `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                  `${selectedEmployee.firstName} ${selectedEmployee.lastName}`,
-                )}&background=2563eb&color=fff&rounded=true&size=128`
-              }
-              alt={`${selectedEmployee.firstName} ${selectedEmployee.lastName}`}
-            />
+        <div>
+          <button
+            type="button"
+            onClick={() =>
+              navigate(
+                `/employees/${selectedEmployee.id}/edit`,
+              )
+            }
+          >
+            Edit
+          </button>
 
-            <div>
-              <h1>{selectedEmployee.firstName} {selectedEmployee.lastName}</h1>
-              <p className="profile-subtitle">{selectedEmployee.company.title} — {selectedEmployee.company.department}</p>
-            </div>
-
-            <div className="profile-meta">
-              <div>
-                <span>Email</span>
-                <p>{selectedEmployee.email}</p>
-              </div>
-              <div>
-                <span>Phone</span>
-                <p>{selectedEmployee.phone}</p>
-              </div>
-              <div>
-                <span>Company</span>
-                <p>{selectedEmployee.company.name}</p>
-              </div>
-            </div>
-          </section>
-
-          <section className="info-card">
-            <div className="info-section">
-              <h2>Personal Details</h2>
-              <div className="info-row">
-                <div className="info-label">Age</div>
-                <div className="info-value">{selectedEmployee.age}</div>
-              </div>
-              <div className="info-row">
-                <div className="info-label">Gender</div>
-                <div className="info-value">{selectedEmployee.gender}</div>
-              </div>
-              <div className="info-row">
-                <div className="info-label">Address</div>
-                <div className="info-value">{selectedEmployee.address.address}, {selectedEmployee.address.city}</div>
-              </div>
-            </div>
-
-            <div className="info-section">
-              <h2>Company Info</h2>
-              <div className="info-row">
-                <div className="info-label">Department</div>
-                <div className="info-value">{selectedEmployee.company.department}</div>
-              </div>
-              <div className="info-row">
-                <div className="info-label">Role</div>
-                <div className="info-value">{selectedEmployee.company.title}</div>
-              </div>
-              <div className="info-row">
-                <div className="info-label">Company</div>
-                <div className="info-value">{selectedEmployee.company.name}</div>
-              </div>
-            </div>
-          </section>
+          <button
+            type="button"
+            onClick={handleDelete}
+          >
+            Delete
+          </button>
         </div>
       </div>
+
+      {/* Profile */}
+      <section className="employee-profile">
+        <img
+          className="employee-profile-image"
+          src={
+            selectedEmployee.image ||
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(
+              fullName,
+            )}`
+          }
+          alt={fullName}
+        />
+
+        <div>
+          <h1>{fullName}</h1>
+
+          <p>
+            {selectedEmployee.company.title}
+          </p>
+
+          <p>
+            {selectedEmployee.company.department}
+          </p>
+        </div>
+      </section>
+
+      {/* Contact Information */}
+      <section>
+        <h2>Contact Information</h2>
+
+        <div>
+          <strong>Email</strong>
+          <p>
+            {selectedEmployee.email}
+          </p>
+        </div>
+
+        <div>
+          <strong>Phone</strong>
+          <p>
+            {selectedEmployee.phone}
+          </p>
+        </div>
+
+        <div>
+          <strong>Age</strong>
+          <p>
+            {selectedEmployee.age}
+          </p>
+        </div>
+      </section>
+
+      {/* Company Information */}
+      <section>
+        <h2>Company Information</h2>
+
+        <div>
+          <strong>Company</strong>
+          <p>
+            {selectedEmployee.company.name}
+          </p>
+        </div>
+
+        <div>
+          <strong>Department</strong>
+          <p>
+            {selectedEmployee.company.department}
+          </p>
+        </div>
+
+        <div>
+          <strong>Designation</strong>
+          <p>
+            {selectedEmployee.company.title}
+          </p>
+        </div>
+      </section>
+
+      {/* Address */}
+      <section>
+        <h2>Address</h2>
+
+        <div>
+          <strong>Address</strong>
+          <p>
+            {selectedEmployee.address.address}
+          </p>
+        </div>
+
+        <div>
+          <strong>City</strong>
+          <p>
+            {selectedEmployee.address.city}
+          </p>
+        </div>
+
+        <div>
+          <strong>State</strong>
+          <p>
+            {selectedEmployee.address.state}
+          </p>
+        </div>
+
+        <div>
+          <strong>Postal Code</strong>
+          <p>
+            {selectedEmployee.address.postalCode}
+          </p>
+        </div>
+      </section>
     </div>
   );
 };
