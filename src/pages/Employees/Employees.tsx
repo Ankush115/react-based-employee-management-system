@@ -7,7 +7,10 @@ import LoadingState from "../../components/common/LoadingState";
 import ErrorState from "../../components/common/ErrorState";
 import EmptyState from "../../components/common/EmptyState";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { fetchEmployees } from "../../store/slices/employeeSlice";
+import {
+  fetchEmployees,
+  deleteEmployee,
+} from "../../store/slices/employeeSlice";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../store/slices/authSlice";
 import type { SortField, SortDirection } from "../../types/employeeTable";
@@ -123,9 +126,29 @@ const Employees = () => {
 
     return sortDirection === "asc" ? comparison : -comparison;
   });
+  const handleDelete = async (employeeId: string) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this employee?",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      await dispatch(deleteEmployee(employeeId)).unwrap();
+    } catch (error) {
+      console.error("Delete failed:", error);
+    }
+  };
 
   // Pagination
   const totalPages = Math.ceil(sortedEmployees.length / ITEMS_PER_PAGE);
+  useEffect(() => {
+    if (totalPages > 0 && currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
 
@@ -235,6 +258,7 @@ const Employees = () => {
             sortField={sortField}
             sortDirection={sortDirection}
             onSort={handleSort}
+            onDelete={handleDelete}
           />
 
           <EmployeePagination

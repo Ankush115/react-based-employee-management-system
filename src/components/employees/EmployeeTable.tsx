@@ -7,6 +7,7 @@ interface EmployeeTableProps {
   sortField: SortField;
   sortDirection: "asc" | "desc";
   onSort: (field: SortField) => void;
+  onDelete: (employeeId: string) => void;
 }
 
 const EmployeeTable = ({
@@ -14,6 +15,7 @@ const EmployeeTable = ({
   sortField,
   sortDirection,
   onSort,
+  onDelete,
 }: EmployeeTableProps) => {
   const getSortIcon = (field: SortField) => {
     if (sortField !== field) return null;
@@ -58,6 +60,7 @@ const EmployeeTable = ({
               Phone
               {getSortIcon("phone")}
             </th>
+            <th>Actions</th>
           </tr>
         </thead>
 
@@ -95,6 +98,18 @@ const EmployeeTable = ({
 
               <td>{employee.address.city}</td>
               <td>{employee.phone}</td>
+              <td>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onDelete) {
+                      onDelete(String(employee.id));
+                    }
+                  }}
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>

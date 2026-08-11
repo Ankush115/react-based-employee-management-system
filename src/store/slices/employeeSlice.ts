@@ -5,6 +5,7 @@ import {
   getEmployeeById,
   createEmployee,
   updateEmployee as updateEmployeeApi,
+  deleteEmployee as deleteEmployeeApi,
 } from "../../services/employeeService";
 
 import type { Employee } from "../../types/employee";
@@ -110,6 +111,20 @@ export const updateEmployee = createAsyncThunk(
     }
   },
 );
+export const deleteEmployee = createAsyncThunk(
+  "employees/deleteEmployee",
+  async (employeeId: string, { rejectWithValue }) => {
+    try {
+      const data = await deleteEmployeeApi(employeeId);
+
+      return data;
+    } catch (error) {
+      console.error(error);
+
+      return rejectWithValue("Failed to delete employee");
+    }
+  },
+);
 
 const employeeSlice = createSlice({
   name: "employees",
@@ -198,6 +213,31 @@ const employeeSlice = createSlice({
         state.loading = false;
 
         state.error = (action.payload as string) || "Failed to update employee";
+      })
+      // Delete employee
+      .addCase(deleteEmployee.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      .addCase(deleteEmployee.fulfilled, (state, action) => {
+        state.loading = false;
+
+        const deletedEmployeeId = action.payload.id;
+
+        state.employees = state.employees.filter(
+          (employee) => employee.id !== deletedEmployeeId,
+        );
+
+        if (state.selectedEmployee?.id === deletedEmployeeId) {
+          state.selectedEmployee = null;
+        }
+      })
+
+      .addCase(deleteEmployee.rejected, (state, action) => {
+        state.loading = false;
+
+        state.error = (action.payload as string) || "Failed to delete employee";
       });
   },
 });

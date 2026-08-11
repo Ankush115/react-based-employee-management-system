@@ -70,3 +70,12 @@ export const updateEmployee = async (
 
   return response.data;
 };
+export const deleteEmployee = async (
+  employeeId: string,
+) => {
+  const response = await api.delete(
+    `/users/${employeeId}`,
+  );
+
+  return response.data;
+};
