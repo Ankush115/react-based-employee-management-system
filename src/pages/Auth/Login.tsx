@@ -3,10 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
 import { login } from "../../store/slices/authSlice";
 
@@ -21,9 +18,7 @@ const loginSchema = yup.object({
     .required("Email is required")
     .email("Enter a valid email"),
 
-  password: yup
-    .string()
-    .required("Password is required"),
+  password: yup.string().required("Password is required"),
 });
 
 const Login = () => {
@@ -31,30 +26,19 @@ const Login = () => {
 
   const dispatch = useAppDispatch();
 
-  const {
-    loading,
-    error,
-  } = useAppSelector(
-    (state) => state.auth
-  );
+  const { loading, error } = useAppSelector((state) => state.auth);
 
   const {
     register,
     handleSubmit,
-    formState: {
-      errors,
-    },
+    formState: { errors },
   } = useForm<LoginFormData>({
     resolver: yupResolver(loginSchema),
   });
 
-  const onSubmit = async (
-    data: LoginFormData
-  ) => {
+  const onSubmit = async (data: LoginFormData) => {
     try {
-      await dispatch(
-        login(data)
-      ).unwrap();
+      await dispatch(login(data)).unwrap();
 
       navigate("/employees");
     } catch (error) {
@@ -68,7 +52,9 @@ const Login = () => {
         <div className="page-header">
           <div>
             <h1>Employee Management System</h1>
-            <p className="page-subtitle">Sign in to manage your team, departments, and employees.</p>
+            <p className="page-subtitle">
+              Sign in to manage your team, departments, and employees.
+            </p>
           </div>
         </div>
 
@@ -79,23 +65,46 @@ const Login = () => {
             <label className="form-label" htmlFor="email">
               Email
             </label>
-            <input className="form-input" id="email" type="email" {...register("email")} />
-            {errors.email && <p className="form-error">{errors.email.message}</p>}
+            <input
+              className="form-input"
+              id="email"
+              type="email"
+              {...register("email")}
+            />
+            {errors.email && (
+              <p className="form-error">{errors.email.message}</p>
+            )}
           </div>
 
           <div className="form-group">
             <label className="form-label" htmlFor="password">
               Password
             </label>
-            <input className="form-input" id="password" type="password" {...register("password")} />
-            {errors.password && <p className="form-error">{errors.password.message}</p>}
+            <input
+              className="form-input"
+              id="password"
+              type="password"
+              {...register("password")}
+            />
+            {errors.password && (
+              <p className="form-error">{errors.password.message}</p>
+            )}
           </div>
 
           <div className="form-actions">
             <button className="primary-button" type="submit" disabled={loading}>
               {loading ? "Logging in..." : "Login"}
             </button>
+            <button
+              className="primary-button"
+              type="button"
+              onClick={() => navigate("/register")}
+            >
+              Register
+            </button>
           </div>
+
+          <a href="/forgot-password">Forgot Password?</a>
         </form>
       </div>
     </div>

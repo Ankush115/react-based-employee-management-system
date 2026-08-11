@@ -3,9 +3,27 @@ import { Link } from "react-router-dom";
 
 interface EmployeeTableProps {
   employees: Employee[];
-  sortField: "name" | "email" | "department" | "role";
+  sortField:
+    | "name"
+    | "email"
+    | "department"
+    | "role"
+    | "birthDate"
+    | "location"
+    | "company"
+    | "phone";
   sortDirection: "asc" | "desc";
-  onSort: (field: "name" | "email" | "department" | "role") => void;
+  onSort: (
+    field:
+      | "name"
+      | "email"
+      | "department"
+      | "role"
+      | "birthDate"
+      | "location"
+      | "company"
+      | "phone",
+  ) => void;
 }
 
 const EmployeeTable = ({
@@ -15,7 +33,15 @@ const EmployeeTable = ({
   onSort,
 }: EmployeeTableProps) => {
   const getSortIcon = (
-    field: "name" | "email" | "department" | "role",
+    field:
+      | "name"
+      | "email"
+      | "department"
+      | "role"
+      | "birthDate"
+      | "location"
+      | "company"
+      | "phone",
   ) => {
     if (sortField !== field) return null;
 
@@ -27,40 +53,35 @@ const EmployeeTable = ({
       <table className="employee-table">
         <thead>
           <tr>
-            <th
-              className="sortable"
-              onClick={() => onSort("name")}
-            >
+            <th className="sortable" onClick={() => onSort("name")}>
               Employee
               {getSortIcon("name")}
             </th>
 
-            <th
-              className="sortable"
-              onClick={() => onSort("email")}
-            >
+            <th className="sortable" onClick={() => onSort("email")}>
               Email
               {getSortIcon("email")}
             </th>
 
-            <th
-              className="sortable"
-              onClick={() => onSort("department")}
-            >
+            <th className="sortable" onClick={() => onSort("department")}>
               Department
               {getSortIcon("department")}
             </th>
 
-            <th
-              className="sortable"
-              onClick={() => onSort("role")}
-            >
-              Role
+            <th className="sortable" onClick={() => onSort("role")}>
+              Designation
               {getSortIcon("role")}
             </th>
+            <th onClick={() => onSort("company")}>
+              Company{getSortIcon("company")}
+            </th>
 
-            <th>Phone</th>
-            <th>Location</th>
+            <th onClick={() => onSort("location")}>
+              Location{getSortIcon("location")}
+            </th>
+            <th onClick={() => onSort("phone")}>
+              Phone{getSortIcon("phone")}
+            </th>
           </tr>
         </thead>
 
@@ -94,9 +115,10 @@ const EmployeeTable = ({
 
               <td>{employee.company.title}</td>
 
-              <td>{employee.phone}</td>
+              <td>{employee.company.name}</td>
 
               <td>{employee.address.city}</td>
+              <td>{employee.phone}</td>
             </tr>
           ))}
         </tbody>

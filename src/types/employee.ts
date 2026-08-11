@@ -11,6 +11,7 @@ export interface Employee {
   birthDate: string;
   image: string;
   role: string;
+  status:string;
   company: {
     department: string;
     name: string;

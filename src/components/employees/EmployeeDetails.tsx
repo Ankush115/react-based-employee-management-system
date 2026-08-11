@@ -85,7 +85,7 @@ const EmployeeDetails = () => {
                 <p>{selectedEmployee.phone}</p>
               </div>
               <div>
-                <span>Office</span>
+                <span>Company</span>
                 <p>{selectedEmployee.company.name}</p>
               </div>
             </div>
