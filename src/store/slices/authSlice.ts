@@ -23,7 +23,14 @@ const getInitialAuthState = (): AuthState => {
     const storedAuth = localStorage.getItem("auth");
 
     if (storedAuth) {
-      return JSON.parse(storedAuth);
+      const parsedAuth = JSON.parse(storedAuth);
+
+      return {
+        user: parsedAuth.user ?? null,
+        loading: false,
+        error: null,
+        isAuthenticated: parsedAuth.isAuthenticated === true,
+      };
     }
   } catch (error) {
     console.error("Failed to restore authentication", error);
