@@ -6,17 +6,38 @@ export const getEmployees = async () => {
   return response.data;
 };
 
-export const getEmployeeById = async (
-  employeeId: string
-) => {
-  const response = await api.get(
-    `/users/${employeeId}`
-  );
+export const getEmployeeById = async (employeeId: string) => {
+  const response = await api.get(`/users/${employeeId}`);
 
   return response.data;
 };
 
-export const createEmployee = async (
+export const createEmployee = async (employeeData: {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  age: number;
+  department: string;
+  role: string;
+}) => {
+  const response = await api.post("/users/add", {
+    firstName: employeeData.firstName,
+    lastName: employeeData.lastName,
+    email: employeeData.email,
+    phone: employeeData.phone,
+    age: employeeData.age,
+
+    company: {
+      department: employeeData.department,
+      title: employeeData.role,
+    },
+  });
+
+  return response.data;
+};
+export const updateEmployee = async (
+  employeeId: string,
   employeeData: {
     firstName: string;
     lastName: string;
@@ -27,21 +48,24 @@ export const createEmployee = async (
     role: string;
   }
 ) => {
-  const response = await api.post(
-    "/users/add",
+  const response = await api.put(
+    `/users/${employeeId}`,
     {
       firstName: employeeData.firstName,
       lastName: employeeData.lastName,
       email: employeeData.email,
       phone: employeeData.phone,
       age: employeeData.age,
-
       company: {
-        department:
-          employeeData.department,
+        department: employeeData.department,
         title: employeeData.role,
       },
     }
+  );
+
+  console.log(
+    "API update response:",
+    response.data
   );
 
   return response.data;

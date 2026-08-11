@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-// import { getEmployees } from "../../services/employeeService";
 import type { Employee } from "../../types/employee";
 import EmployeeTable from "../../components/employees/EmployeeTable";
 import EmployeeToolbar from "../../components/employees/EmployeeToolbar";
@@ -16,7 +15,7 @@ type SortField = "name" | "email" | "department" | "role";
 
 type SortDirection = "asc" | "desc";
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 5;
 
 const Employees = () => {
   const navigate = useNavigate();

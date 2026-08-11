@@ -23,10 +23,10 @@ const EmployeeDetails = () => {
   );
 
   useEffect(() => {
-    if (id) {
+    if (id && selectedEmployee?.id !== Number(id)) {
       dispatch(fetchEmployeeById(id));
     }
-  }, [id, dispatch]);
+  }, [id, dispatch, selectedEmployee?.id]);
 
   if (loading) {
     return <LoadingState />;
