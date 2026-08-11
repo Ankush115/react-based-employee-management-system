@@ -5,9 +5,13 @@ interface ErrorStateProps {
 
 const ErrorState = ({ message, onRetry }: ErrorStateProps) => {
   return (
-    <div>
+    <div className="error-state">
       <p>{message}</p>
-      {onRetry && <button onClick={onRetry}>Try Again</button>}
+      {onRetry && (
+        <button className="secondary-button" onClick={onRetry}>
+          Try Again
+        </button>
+      )}
     </div>
   );
 };

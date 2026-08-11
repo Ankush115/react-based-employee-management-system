@@ -50,53 +50,82 @@ const EmployeeDetails = () => {
   }
 
   return (
-    <div>
-      <button type="button" onClick={() => navigate("/employees")}>
-        Back to Employees
-      </button>
-      <button
-        type="button"
-        onClick={() => navigate(`/employees/${selectedEmployee.id}/edit`)}
-      >
-        Edit Employee
-      </button>
+    <div className="page-shell">
+      <div className="content-card">
+        <div className="button-row">
+          <button className="secondary-button" type="button" onClick={() => navigate("/employees")}>Back to Employees</button>
+          <button className="primary-button" type="button" onClick={() => navigate(`/employees/${selectedEmployee.id}/edit`)}>Edit Employee</button>
+        </div>
 
-      <h1>
-        {selectedEmployee.firstName} {selectedEmployee.lastName}
-      </h1>
+        <div className="detail-grid">
+          <section className="profile-card">
+            <img
+              className="profile-avatar"
+              src={
+                selectedEmployee.image ||
+                `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                  `${selectedEmployee.firstName} ${selectedEmployee.lastName}`,
+                )}&background=2563eb&color=fff&rounded=true&size=128`
+              }
+              alt={`${selectedEmployee.firstName} ${selectedEmployee.lastName}`}
+            />
 
-      <p>
-        <strong>Email:</strong> {selectedEmployee.email}
-      </p>
+            <div>
+              <h1>{selectedEmployee.firstName} {selectedEmployee.lastName}</h1>
+              <p className="profile-subtitle">{selectedEmployee.company.title} — {selectedEmployee.company.department}</p>
+            </div>
 
-      <p>
-        <strong>Phone:</strong> {selectedEmployee.phone}
-      </p>
+            <div className="profile-meta">
+              <div>
+                <span>Email</span>
+                <p>{selectedEmployee.email}</p>
+              </div>
+              <div>
+                <span>Phone</span>
+                <p>{selectedEmployee.phone}</p>
+              </div>
+              <div>
+                <span>Office</span>
+                <p>{selectedEmployee.company.name}</p>
+              </div>
+            </div>
+          </section>
 
-      <p>
-        <strong>Age:</strong> {selectedEmployee.age}
-      </p>
+          <section className="info-card">
+            <div className="info-section">
+              <h2>Personal Details</h2>
+              <div className="info-row">
+                <div className="info-label">Age</div>
+                <div className="info-value">{selectedEmployee.age}</div>
+              </div>
+              <div className="info-row">
+                <div className="info-label">Gender</div>
+                <div className="info-value">{selectedEmployee.gender}</div>
+              </div>
+              <div className="info-row">
+                <div className="info-label">Address</div>
+                <div className="info-value">{selectedEmployee.address.address}, {selectedEmployee.address.city}</div>
+              </div>
+            </div>
 
-      <p>
-        <strong>Gender:</strong> {selectedEmployee.gender}
-      </p>
-
-      <p>
-        <strong>Department:</strong> {selectedEmployee.company.department}
-      </p>
-
-      <p>
-        <strong>Role:</strong> {selectedEmployee.company.title}
-      </p>
-
-      <p>
-        <strong>Company:</strong> {selectedEmployee.company.name}
-      </p>
-
-      <p>
-        <strong>Address:</strong> {selectedEmployee.address.address},{" "}
-        {selectedEmployee.address.city}
-      </p>
+            <div className="info-section">
+              <h2>Company Info</h2>
+              <div className="info-row">
+                <div className="info-label">Department</div>
+                <div className="info-value">{selectedEmployee.company.department}</div>
+              </div>
+              <div className="info-row">
+                <div className="info-label">Role</div>
+                <div className="info-value">{selectedEmployee.company.title}</div>
+              </div>
+              <div className="info-row">
+                <div className="info-label">Company</div>
+                <div className="info-value">{selectedEmployee.company.name}</div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
     </div>
   );
 };

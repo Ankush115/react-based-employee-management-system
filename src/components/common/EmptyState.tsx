@@ -6,7 +6,7 @@ const EmptyState = ({
   message,
 }: EmptyStateProps) => {
   return (
-    <div>
+    <div className="empty-state">
       <p>{message}</p>
     </div>
   );

@@ -63,65 +63,41 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h1>
-        Employee Management System
-      </h1>
-
-      <h2>Login</h2>
-
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        {error && (
-          <p>{error}</p>
-        )}
-
-        <div>
-          <label htmlFor="email">
-            Email
-          </label>
-
-          <input
-            id="email"
-            type="email"
-            {...register("email")}
-          />
-
-          {errors.email && (
-            <p>
-              {errors.email.message}
-            </p>
-          )}
+    <div className="auth-page">
+      <div className="auth-card">
+        <div className="page-header">
+          <div>
+            <h1>Employee Management System</h1>
+            <p className="page-subtitle">Sign in to manage your team, departments, and employees.</p>
+          </div>
         </div>
 
-        <div>
-          <label htmlFor="password">
-            Password
-          </label>
+        <form className="form-card" onSubmit={handleSubmit(onSubmit)}>
+          {error && <p className="form-error">{error}</p>}
 
-          <input
-            id="password"
-            type="password"
-            {...register("password")}
-          />
+          <div className="form-group">
+            <label className="form-label" htmlFor="email">
+              Email
+            </label>
+            <input className="form-input" id="email" type="email" {...register("email")} />
+            {errors.email && <p className="form-error">{errors.email.message}</p>}
+          </div>
 
-          {errors.password && (
-            <p>
-              {errors.password.message}
-            </p>
-          )}
-        </div>
+          <div className="form-group">
+            <label className="form-label" htmlFor="password">
+              Password
+            </label>
+            <input className="form-input" id="password" type="password" {...register("password")} />
+            {errors.password && <p className="form-error">{errors.password.message}</p>}
+          </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-        >
-          {loading
-            ? "Logging in..."
-            : "Login"}
-        </button>
-      </form>
+          <div className="form-actions">
+            <button className="primary-button" type="submit" disabled={loading}>
+              {loading ? "Logging in..." : "Login"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

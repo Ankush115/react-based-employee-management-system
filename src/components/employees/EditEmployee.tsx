@@ -125,93 +125,70 @@ const EditEmployee = () => {
   }
 
   return (
-    <div>
-      <h1>Edit Employee</h1>
-
-      <form onSubmit={handleSubmit(onSubmit)}>
-        {/* First Name */}
-        <div>
-          <label htmlFor="firstName">First Name</label>
-
-          <input id="firstName" type="text" {...register("firstName")} />
-
-          {errors.firstName && <p>{errors.firstName.message}</p>}
+    <div className="page-shell">
+      <div className="content-card">
+        <div className="page-header">
+          <div>
+            <h1>Edit Employee</h1>
+            <p className="page-subtitle">Update the employee’s profile, role, and department details.</p>
+          </div>
         </div>
 
-        {/* Last Name */}
-        <div>
-          <label htmlFor="lastName">Last Name</label>
+        <form className="form-card" onSubmit={handleSubmit(onSubmit)}>
+          <div className="form-grid">
+            <div className="form-group">
+              <label className="form-label" htmlFor="firstName">First Name</label>
+              <input className="form-input" id="firstName" type="text" {...register("firstName")} />
+              {errors.firstName && <p className="form-error">{errors.firstName.message}</p>}
+            </div>
 
-          <input id="lastName" type="text" {...register("lastName")} />
+            <div className="form-group">
+              <label className="form-label" htmlFor="lastName">Last Name</label>
+              <input className="form-input" id="lastName" type="text" {...register("lastName")} />
+              {errors.lastName && <p className="form-error">{errors.lastName.message}</p>}
+            </div>
 
-          {errors.lastName && <p>{errors.lastName.message}</p>}
-        </div>
+            <div className="form-group">
+              <label className="form-label" htmlFor="email">Email</label>
+              <input className="form-input" id="email" type="email" {...register("email")} />
+              {errors.email && <p className="form-error">{errors.email.message}</p>}
+            </div>
 
-        {/* Email */}
-        <div>
-          <label htmlFor="email">Email</label>
+            <div className="form-group">
+              <label className="form-label" htmlFor="phone">Phone</label>
+              <input className="form-input" id="phone" type="tel" {...register("phone")} />
+              {errors.phone && <p className="form-error">{errors.phone.message}</p>}
+            </div>
 
-          <input id="email" type="email" {...register("email")} />
+            <div className="form-group">
+              <label className="form-label" htmlFor="age">Age</label>
+              <input className="form-input" id="age" type="number" {...register("age", { valueAsNumber: true })} />
+              {errors.age && <p className="form-error">{errors.age.message}</p>}
+            </div>
 
-          {errors.email && <p>{errors.email.message}</p>}
-        </div>
+            <div className="form-group">
+              <label className="form-label" htmlFor="department">Department</label>
+              <input className="form-input" id="department" type="text" {...register("department")} />
+              {errors.department && <p className="form-error">{errors.department.message}</p>}
+            </div>
 
-        {/* Phone */}
-        <div>
-          <label htmlFor="phone">Phone</label>
+            <div className="form-group">
+              <label className="form-label" htmlFor="role">Role</label>
+              <input className="form-input" id="role" type="text" {...register("role")} />
+              {errors.role && <p className="form-error">{errors.role.message}</p>}
+            </div>
+          </div>
 
-          <input id="phone" type="tel" {...register("phone")} />
-
-          {errors.phone && <p>{errors.phone.message}</p>}
-        </div>
-
-        {/* Age */}
-        <div>
-          <label htmlFor="age">Age</label>
-
-          <input
-            id="age"
-            type="number"
-            {...register("age", {
-              valueAsNumber: true,
-            })}
-          />
-
-          {errors.age && <p>{errors.age.message}</p>}
-        </div>
-
-        {/* Department */}
-        <div>
-          <label htmlFor="department">Department</label>
-
-          <input id="department" type="text" {...register("department")} />
-
-          {errors.department && <p>{errors.department.message}</p>}
-        </div>
-
-        {/* Role */}
-        <div>
-          <label htmlFor="role">Role</label>
-
-          <input id="role" type="text" {...register("role")} />
-
-          {errors.role && <p>{errors.role.message}</p>}
-        </div>
-
-        {/* Actions */}
-        <div>
-          <button type="submit" disabled={loading}>
-            {loading ? "Updating..." : "Update Employee"}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => navigate(`/employees/${selectedEmployee.id}`)}
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
+          <div className="form-actions">
+            <button className="primary-button" type="submit" disabled={loading}>
+              {loading ? "Updating..." : "Update Employee"}
+            </button>
+            <button className="secondary-button" type="button" onClick={() => navigate(`/employees/${selectedEmployee.id}`)}>
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

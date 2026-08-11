@@ -8,35 +8,57 @@ interface EmployeeTableProps {
   onSort: (field: "name" | "email" | "department" | "role") => void;
 }
 
-
 const EmployeeTable = ({
   employees,
   sortField,
   sortDirection,
   onSort,
 }: EmployeeTableProps) => {
+  const getSortIcon = (
+    field: "name" | "email" | "department" | "role",
+  ) => {
+    if (sortField !== field) return null;
+
+    return sortDirection === "asc" ? " ↑" : " ↓";
+  };
+
   return (
-    <div>
-      <table border={1}>
+    <div className="table-container">
+      <table className="employee-table">
         <thead>
           <tr>
-            <th onClick={() => onSort("name")}>
-              Employee Employee
-              {sortField === "name" && (sortDirection === "asc" ? " ↑" : " ↓")}
+            <th
+              className="sortable"
+              onClick={() => onSort("name")}
+            >
+              Employee
+              {getSortIcon("name")}
             </th>
-            <th onClick={() => onSort("email")}>
+
+            <th
+              className="sortable"
+              onClick={() => onSort("email")}
+            >
               Email
-              {sortField === "email" && (sortDirection === "asc" ? " ↑" : " ↓")}
+              {getSortIcon("email")}
             </th>
-            <th onClick={() => onSort("department")}>
+
+            <th
+              className="sortable"
+              onClick={() => onSort("department")}
+            >
               Department
-              {sortField === "department" &&
-                (sortDirection === "asc" ? " ↑" : " ↓")}
+              {getSortIcon("department")}
             </th>
-            <th onClick={() => onSort("role")}>
+
+            <th
+              className="sortable"
+              onClick={() => onSort("role")}
+            >
               Role
-              {sortField === "role" && (sortDirection === "asc" ? " ↑" : " ↓")}
+              {getSortIcon("role")}
             </th>
+
             <th>Phone</th>
             <th>Location</th>
           </tr>
@@ -46,8 +68,9 @@ const EmployeeTable = ({
           {employees.map((employee) => (
             <tr key={employee.id}>
               <td>
-                <div>
+                <div className="employee-cell">
                   <img
+                    className="avatar"
                     src={
                       employee.image ||
                       `https://ui-avatars.com/api/?name=${encodeURIComponent(
@@ -57,11 +80,11 @@ const EmployeeTable = ({
                     alt={`${employee.firstName} ${employee.lastName}`}
                   />
 
-                  <span>
+                  <div className="employee-name">
                     <Link to={`/employees/${employee.id}`}>
                       {employee.firstName} {employee.lastName}
                     </Link>
-                  </span>
+                  </div>
                 </div>
               </td>
 

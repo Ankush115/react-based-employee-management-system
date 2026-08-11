@@ -22,17 +22,17 @@ const EmployeeToolbar = ({
   onClearFilters,
 }: EmployeeToolbarProps) => {
   return (
-    <div>
-      {/* Search */}
+    <div className="employee-toolbar">
       <input
+        className="toolbar-input"
         type="text"
         placeholder="Search employees..."
         value={search}
         onChange={(event) => onSearchChange(event.target.value)}
       />
 
-      {/* Department */}
       <select
+        className="toolbar-select"
         value={department}
         onChange={(event) => onDepartmentChange(event.target.value)}
       >
@@ -45,8 +45,8 @@ const EmployeeToolbar = ({
         ))}
       </select>
 
-      {/* Role */}
       <select
+        className="toolbar-select"
         value={role}
         onChange={(event) => onRoleChange(event.target.value)}
       >
@@ -59,8 +59,7 @@ const EmployeeToolbar = ({
         ))}
       </select>
 
-      {/* Clear */}
-      <button onClick={onClearFilters}>
+      <button className="toolbar-button" onClick={onClearFilters}>
         Clear Filters
       </button>
     </div>

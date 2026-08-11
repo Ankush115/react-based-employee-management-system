@@ -22,9 +22,10 @@ const EmployeePagination = ({
   };
 
   return (
-    <div>
+    <div className="pagination">
       <button
         type="button"
+        className="pagination-button"
         disabled={currentPage === 1}
         onClick={handlePrevious}
       >
@@ -38,6 +39,7 @@ const EmployeePagination = ({
           <button
             type="button"
             key={page}
+            className={`pagination-button${currentPage === page ? " active" : ""}`}
             disabled={currentPage === page}
             onClick={() => onPageChange(page)}
           >
@@ -48,6 +50,7 @@ const EmployeePagination = ({
 
       <button
         type="button"
+        className="pagination-button"
         disabled={currentPage === totalPages}
         onClick={handleNext}
       >

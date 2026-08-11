@@ -166,18 +166,24 @@ const Employees = () => {
   }
 
   return (
-    <div>
-      <h1>Employees</h1>
-     <div> <button type="button" onClick={() => navigate("/employees/add")}>
-        Add Employee
-      </button>
-      <button type="button" onClick={handleLogout}>
-        Logout
-      </button></div>
-      <p>
-        Showing {showingFrom} - {showingTo} of {sortedEmployees.length}{" "}
-        employees
-      </p>
+    <div className="employees-page">
+      <div className="page-header">
+        <div>
+          <h1>Employees</h1>
+          <p className="summary-text">
+            Showing {showingFrom} - {showingTo} of {sortedEmployees.length} employees
+          </p>
+        </div>
+
+        <div className="header-actions">
+          <button type="button" className="primary-button" onClick={() => navigate("/employees/add")}> 
+            Add Employee
+          </button>
+          <button type="button" className="secondary-button" onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
+      </div>
 
       <EmployeeToolbar
         search={search}
