@@ -29,7 +29,7 @@ const AppRoutes = () => {
           }
         />
         <Route
-          path="/employees/edit/:id"
+          path="/employees/:id/edit"
           element={
             <ProtectedRoute>
               <EditEmployee />

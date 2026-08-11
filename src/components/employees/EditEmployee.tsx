@@ -5,6 +5,14 @@ import {
 } from "react-router-dom";
 
 import {
+  useForm,
+} from "react-hook-form";
+
+import {
+  yupResolver,
+} from "@hookform/resolvers/yup";
+
+import {
   useAppDispatch,
   useAppSelector,
 } from "../../store/hooks";
@@ -13,9 +21,23 @@ import {
   fetchEmployeeById,
 } from "../../store/slices/employeeSlice";
 
-import LoadingState from "../common/LoadingState";
-import ErrorState from "../common/ErrorState";
-import EmptyState from "../common/EmptyState";
+import {
+  employeeSchema,
+} from "../../validations/employeeSchema";
+
+import LoadingState from "../../components/common/LoadingState";
+import ErrorState from "../../components/common/ErrorState";
+import EmptyState from "../../components/common/EmptyState";
+
+interface EmployeeFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  age: number;
+  department: string;
+  role: string;
+}
 
 const EditEmployee = () => {
   const { id } = useParams<{
@@ -34,6 +56,19 @@ const EditEmployee = () => {
     (state) => state.employees
   );
 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: {
+      errors,
+    },
+  } = useForm<EmployeeFormData>({
+    resolver: yupResolver(
+      employeeSchema
+    ),
+  });
+
   useEffect(() => {
     if (id) {
       dispatch(
@@ -41,6 +76,42 @@ const EditEmployee = () => {
       );
     }
   }, [id, dispatch]);
+
+  useEffect(() => {
+    if (selectedEmployee) {
+      reset({
+        firstName:
+          selectedEmployee.firstName,
+
+        lastName:
+          selectedEmployee.lastName,
+
+        email:
+          selectedEmployee.email,
+
+        phone:
+          selectedEmployee.phone,
+
+        age:
+          selectedEmployee.age,
+
+        department:
+          selectedEmployee.company.department,
+
+        role:
+          selectedEmployee.company.title,
+      });
+    }
+  }, [selectedEmployee, reset]);
+
+  const onSubmit = (
+    data: EmployeeFormData
+  ) => {
+    console.log(
+      "Updated employee data:",
+      data
+    );
+  };
 
   if (loading) {
     return <LoadingState />;
@@ -73,22 +144,162 @@ const EditEmployee = () => {
     <div>
       <h1>Edit Employee</h1>
 
-      <p>
-        Editing:{" "}
-        {selectedEmployee.firstName}{" "}
-        {selectedEmployee.lastName}
-      </p>
-
-      <button
-        type="button"
-        onClick={() =>
-          navigate(
-            `/employees/${selectedEmployee.id}`
-          )
-        }
+      <form
+        onSubmit={handleSubmit(onSubmit)}
       >
-        Cancel
-      </button>
+        {/* First Name */}
+        <div>
+          <label htmlFor="firstName">
+            First Name
+          </label>
+
+          <input
+            id="firstName"
+            type="text"
+            {...register("firstName")}
+          />
+
+          {errors.firstName && (
+            <p>
+              {errors.firstName.message}
+            </p>
+          )}
+        </div>
+
+        {/* Last Name */}
+        <div>
+          <label htmlFor="lastName">
+            Last Name
+          </label>
+
+          <input
+            id="lastName"
+            type="text"
+            {...register("lastName")}
+          />
+
+          {errors.lastName && (
+            <p>
+              {errors.lastName.message}
+            </p>
+          )}
+        </div>
+
+        {/* Email */}
+        <div>
+          <label htmlFor="email">
+            Email
+          </label>
+
+          <input
+            id="email"
+            type="email"
+            {...register("email")}
+          />
+
+          {errors.email && (
+            <p>
+              {errors.email.message}
+            </p>
+          )}
+        </div>
+
+        {/* Phone */}
+        <div>
+          <label htmlFor="phone">
+            Phone
+          </label>
+
+          <input
+            id="phone"
+            type="tel"
+            {...register("phone")}
+          />
+
+          {errors.phone && (
+            <p>
+              {errors.phone.message}
+            </p>
+          )}
+        </div>
+
+        {/* Age */}
+        <div>
+          <label htmlFor="age">
+            Age
+          </label>
+
+          <input
+            id="age"
+            type="number"
+            {...register("age", {
+              valueAsNumber: true,
+            })}
+          />
+
+          {errors.age && (
+            <p>
+              {errors.age.message}
+            </p>
+          )}
+        </div>
+
+        {/* Department */}
+        <div>
+          <label htmlFor="department">
+            Department
+          </label>
+
+          <input
+            id="department"
+            type="text"
+            {...register("department")}
+          />
+
+          {errors.department && (
+            <p>
+              {errors.department.message}
+            </p>
+          )}
+        </div>
+
+        {/* Role */}
+        <div>
+          <label htmlFor="role">
+            Role
+          </label>
+
+          <input
+            id="role"
+            type="text"
+            {...register("role")}
+          />
+
+          {errors.role && (
+            <p>
+              {errors.role.message}
+            </p>
+          )}
+        </div>
+
+        {/* Actions */}
+        <div>
+          <button type="submit">
+            Update Employee
+          </button>
+
+          <button
+            type="button"
+            onClick={() =>
+              navigate(
+                `/employees/${selectedEmployee.id}`
+              )
+            }
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
