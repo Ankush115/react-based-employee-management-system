@@ -14,10 +14,8 @@ import ProtectedRoute from "./ProtectedRoute";
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Public Route */}
       <Route path="/login" element={<Login />} />
 
-      {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
@@ -31,7 +29,6 @@ const AppRoutes = () => {
           <Route path="/departments" element={<Departments />} />
         </Route>
       </Route>
-      {/* Default Route */}
       <Route path="*" element={<Navigate to="/employees" replace />} />
     </Routes>
   );

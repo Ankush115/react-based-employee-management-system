@@ -312,15 +312,63 @@ select:focus {
   margin-top: 24px;
 }
 
+.employee-form {
+  display: grid;
+  gap: 24px;
+}
+
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
 }
 
+.form-field,
 .form-group {
   display: grid;
-  gap: 8px;
+  gap: 10px;
+}
+
+.employee-form label,
+.form-label {
+  color: #334155;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.employee-form input,
+.form-input,
+.toolbar-input,
+.toolbar-select {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 16px;
+  padding: 0.95rem 1rem;
+  background: #f8fafc;
+  color: #111827;
+}
+
+.employee-form input:focus,
+.form-input:focus,
+.toolbar-input:focus,
+.toolbar-select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.employee-form p,
+.form-error,
+.form-server-error {
+  margin: 0;
+  color: #b91c1c;
+  font-size: 0.95rem;
+}
+
+.form-server-error {
+  padding: 14px 16px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 16px;
 }
 
 .form-label {

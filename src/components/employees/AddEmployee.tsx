@@ -24,16 +24,23 @@ const AddEmployee = () => {
   };
 
   return (
-    <div>
-      <h1>Add Employee</h1>
+    <div className="page-shell">
+      <div className="content-card">
+        <div className="page-header">
+          <div>
+            <h1>Add Employee</h1>
+            <p className="page-subtitle">Create a new employee profile and add them to your roster.</p>
+          </div>
+        </div>
 
-      <EmployeeForm
-        loading={actionLoading}
-        error={error}
-        submitLabel="Create Employee"
-        onSubmit={onSubmit}
-        onCancel={() => navigate("/employees")}
-      />
+        <EmployeeForm
+          loading={actionLoading}
+          error={error}
+          submitLabel="Create Employee"
+          onSubmit={onSubmit}
+          onCancel={() => navigate("/employees")}
+        />
+      </div>
     </div>
   );
 };

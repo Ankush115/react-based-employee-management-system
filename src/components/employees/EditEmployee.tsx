@@ -90,17 +90,24 @@ const EditEmployee = () => {
   };
 
   return (
-    <div>
-      <h1>Edit Employee</h1>
+    <div className="page-shell">
+      <div className="content-card">
+        <div className="page-header">
+          <div>
+            <h1>Edit Employee</h1>
+            <p className="page-subtitle">Update employee information, role, and department details.</p>
+          </div>
+        </div>
 
-      <EmployeeForm
-        initialValues={initialValues}
-        loading={actionLoading}
-        error={error}
-        submitLabel="Update Employee"
-        onSubmit={onSubmit}
-        onCancel={() => navigate(`/employees/${selectedEmployee.id}`)}
-      />
+        <EmployeeForm
+          initialValues={initialValues}
+          loading={actionLoading}
+          error={error}
+          submitLabel="Update Employee"
+          onSubmit={onSubmit}
+          onCancel={() => navigate(`/employees/${selectedEmployee.id}`)}
+        />
+      </div>
     </div>
   );
 };
