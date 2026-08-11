@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import type { Employee } from "../../types/employee";
-import EmployeeTable from "../../components/employees/EmployeeTable";
-import EmployeeToolbar from "../../components/employees/EmployeeToolbar";
-import EmployeePagination from "../../components/employees/EmployeePagination";
+import EmployeeTable from "../../components/Employees/EmployeeTable";
+import EmployeeToolbar from "../../components/Employees/EmployeeToolbar";
+import EmployeePagination from "../../components/Employees/EmployeePagination";
 import LoadingState from "../../components/common/LoadingState";
 import ErrorState from "../../components/common/ErrorState";
 import EmptyState from "../../components/common/EmptyState";

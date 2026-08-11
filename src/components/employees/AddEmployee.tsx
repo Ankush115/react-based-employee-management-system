@@ -11,7 +11,7 @@ import {
 
 import EmployeeForm, {
   type EmployeeFormData,
-} from "../../components/employees/EmployeeForm";
+} from "./EmployeeForm";
 
 const AddEmployee = () => {
   const navigate = useNavigate();

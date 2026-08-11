@@ -17,11 +17,11 @@ import {
 
 import EmployeeForm, {
   type EmployeeFormData,
-} from "../../components/employees/EmployeeForm";
+} from "./EmployeeForm";
 
-import LoadingState from "../../components/common/LoadingState";
-import ErrorState from "../../components/common/ErrorState";
-import EmptyState from "../../components/common/EmptyState";
+import LoadingState from "../common/LoadingState";
+import ErrorState from "../common/ErrorState";
+import EmptyState from "../common/EmptyState";
 
 const EditEmployee = () => {
   const { id } = useParams<{
